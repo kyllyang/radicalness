@@ -1,0 +1,24 @@
+spring:
+  profiles.active: development
+---
+spring:
+  profiles: development
+datasource:
+  oracle:
+    jdbcUrl: jdbc:oracle:thin:@127.0.0.1:1521/orcl
+    username: fgp
+    password: fgp
+    driver-class-name: oracle.jdbc.OracleDriver
+    validation-query: SELECT 1 FROM dual
+---
+spring:
+  profiles: production
+datasource:
+  oracle:
+    jdbcUrl: jdbc:oracle:thin:@ORCL
+    username: cdm
+    password: cdm
+    driver-class-name: oracle.jdbc.OracleDriver
+    validation-query: SELECT 1 FROM dual
+---
+name: ffff
