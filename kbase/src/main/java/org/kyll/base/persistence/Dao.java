@@ -1,5 +1,9 @@
 package org.kyll.base.persistence;
 
+import org.kyll.common.paginated.Dataset;
+import org.kyll.common.paginated.Paginated;
+import org.kyll.common.paginated.Sort;
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
@@ -11,101 +15,124 @@ import java.util.Map;
  * @param <P> 主键
  * @param <E> 数据库实体
  */
-public interface Dao<P extends Serializable, E extends Entity> {
+public interface Dao<E extends Entity, P extends Serializable> {
 	/**
 	 * 根据主键获取实体。如果没有相应的实体，返回 null。
 	 * @param id 主键
 	 * @return 实体
 	 */
-	public E get(P id);
+	E get(P id);
 
 	/**
-	 * 获取全部实体。
+	 * 获取全部实体
 	 * @return 实体 LIST
 	 */
-	public List<E> getAll();
+	List<E> getAll();
+
+	/**
+	 * 按条件查询数据
+	 * @param condition 条件对象
+	 * @param sorts 排序
+	 * @return 实体 List
+	 */
+	List<E> find(Condition condition, Sort... sorts);
+
+	/**
+	 * 按条件查询数据
+	 * @param condition 条件对象
+	 * @param sortList 排序
+	 * @return 实体 List
+	 */
+	List<E> find(Condition condition, List<Sort> sortList);
+
+	/**
+	 * 按条件查询数据并分页
+	 * @param condition 条件对象
+	 * @param paginated 分页对象
+	 * @return 带有分页信息的数据集
+	 */
+	Dataset<E> find(Condition condition, Paginated paginated);
 
 	/**
 	 * 存储实体到数据库
 	 * @param entity 实体
 	 */
-	public void save(E entity);
+	void insert(E entity);
 
 	/**
 	 * 更新实体
 	 * @param entity 实体
 	 */
-	public void update(E entity);
+	void update(E entity);
 
 	/**
-	 * 增加或更新实体
+	 * 插入或者更新实体
 	 * @param entity 实体
 	 */
-	public void saveOrUpdate(E entity);
-
+	void save(E entity);
 	/**
 	 * 批量保存
 	 * @param entities 实体数组
 	 */
 	@SuppressWarnings("unchecked")
-	public void batchSave(E... entities);
+	void batchInsert(E... entities);
 
 	/**
 	 * 批量保存
 	 * @param entities 实体集合
 	 */
-	public void batchSave(Collection<E> entities);
+	void batchInsert(Collection<E> entities);
 
 	/**
 	 * 批量更新
 	 * @param entities 实体数组
 	 */
 	@SuppressWarnings("unchecked")
-	public void batchUpdate(E... entities);
+	void batchUpdate(E... entities);
 
 	/**
 	 * 批量更新
 	 * @param entities 实体集合
 	 */
-	public void batchUpdate(Collection<E> entities);
+	void batchUpdate(Collection<E> entities);
 
 	/**
 	 * 删除指定的实体
 	 * @param ids 主键
 	 */
 	@SuppressWarnings("unchecked")
-	public void delete(P... ids);
+	void delete(P... ids);
 
 	/**
 	 * 删除指定的实体
 	 * @param entity 实体
 	 */
-	public void delete(E entity);
+	void delete(E entity);
 
 	/**
 	 * 删除指定的实体
 	 * @param entities 实体
 	 */
-	public void delete(Collection<E> entities);
+	void delete(Collection<E> entities);
 
 	/**
 	 * 执行SQL查询语句
 	 * @param sql SQL 语句
 	 * @return Map<String, Object>
 	 */
-	public Map<String, Object> queryForOne(String sql);
+	Map<String, Object> queryForOne(String sql);
 
 	/**
 	 * 执行SQL查询语句
 	 * @param sql SQL 语句
 	 * @return Map<String, Object> 的 List 集合
 	 */
-	public List<Map<String, Object>> queryForList(String sql);
+	List<Map<String, Object>> queryForList(String sql);
 
 	/**
 	 * 执行非SQL查询语句
 	 * @param sql SQL 语句
 	 * @return
 	 */
-	public void execute(String sql);
+	void execute(String sql);
 }

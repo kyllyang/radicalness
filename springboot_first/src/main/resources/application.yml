@@ -5,9 +5,10 @@ spring:
   profiles: development
 datasource:
   oracle:
-    jdbcUrl: jdbc:oracle:thin:@127.0.0.1:1521/orcl
-    username: fgp
-    password: fgp
+    # jdbcUrl: jdbc:oracle:thin:@127.0.0.1:1521/orcl
+    jdbcUrl: jdbc:oracle:thin:@10.21.118.144:1521/orcl
+    username: fgptest1
+    password: fgptest1
     driver-class-name: oracle.jdbc.OracleDriver
     validation-query: SELECT 1 FROM dual
 ---
@@ -21,4 +22,5 @@ datasource:
     driver-class-name: oracle.jdbc.OracleDriver
     validation-query: SELECT 1 FROM dual
 ---
+spring.output.ansi.enabled: DETECT
 name: ffff

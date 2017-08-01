@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
  * Date: 2017-07-30 03:08
  */
 @Repository
-public class UserDao extends JdbcTemplateDao<Long, User> {
+public class UserDao extends JdbcTemplateDao<User, Long> {
 }

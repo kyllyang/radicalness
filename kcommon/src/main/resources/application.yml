@@ -1,5 +1,0 @@
-const:
-  paginated:
-    defaultStartRecord: 0
-    defaultMaxRecord: 20
-    defaultDuePage: 4

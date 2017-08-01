@@ -26,9 +26,9 @@ public class Paginated {
 	private List<Sort> sortList;
 
 	public Paginated() {
-		this.startRecord = Const.DEFAULT_STARTRECORD;
-		this.maxRecord = Const.DEFAULT_MAXRECORD;
-		this.duePage = Const.DEFAULT_DUEPAGE;
+		this.startRecord = Const.DEFAULT_PAGINATED_STARTRECORD;
+		this.maxRecord = Const.DEFAULT_PAGINATED_MAXRECORD;
+		this.duePage = Const.DEFAULT_PAGINATED_DUEPAGE;
 	}
 
 	public Integer getTotalRecord() {
@@ -141,29 +141,5 @@ public class Paginated {
 
 	public void setSortList(List<Sort> sortList) {
 		this.sortList = sortList;
-	}
-
-	public class Sort {
-		private String property;
-		private String direction;
-
-		public Sort() {
-		}
-
-		public String getProperty() {
-			return property;
-		}
-
-		public void setProperty(String property) {
-			this.property = property;
-		}
-
-		public String getDirection() {
-			return direction;
-		}
-
-		public void setDirection(String direction) {
-			this.direction = direction;
-		}
 	}
 }

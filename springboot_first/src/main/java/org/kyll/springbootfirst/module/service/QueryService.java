@@ -1,7 +1,6 @@
 package org.kyll.springbootfirst.module.service;
 
-import org.kyll.base.persistence.impl.JdbcTemplateDao;
-import org.kyll.base.service.DefaultService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -13,6 +12,7 @@ import java.util.Map;
  * User: Kyll
  * Date: 2017-07-30 03:44
  */
+@Slf4j
 @Service
 public class QueryService {
 	@Autowired

@@ -1,10 +1,12 @@
 package org.kyll.base.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.kyll.base.persistence.Condition;
 import org.kyll.base.persistence.Dao;
 import org.kyll.base.persistence.Entity;
 import org.kyll.common.paginated.Dataset;
 import org.kyll.common.paginated.Paginated;
+import org.kyll.common.paginated.Sort;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
@@ -14,9 +16,9 @@ import java.util.List;
  * User: Kyll
  * Date: 2017-07-30 03:12
  */
-public abstract class DefaultService<P extends Serializable, E extends Entity, C extends Condition,  D extends Dao<P, E>> implements Service<P, E, C> {
+public abstract class DefaultService<E extends Entity, P extends Serializable, D extends Dao<E, P>> implements Service<E, P> {
 	@Autowired
-	protected D dao;
+	private D dao;
 
 	@Override
 	public E get(P id) {
@@ -24,14 +26,23 @@ public abstract class DefaultService<P extends Serializable, E extends Entity, C
 	}
 
 	@Override
-	public abstract List<E> find(C condition);
+	public List<E> find(Condition condition, Sort... sorts) {
+		return dao.find(condition, sorts);
+	}
 
 	@Override
-	public abstract Dataset<E> find(C condition, Paginated paginated);
+	public List<E> find(Condition condition, List<Sort> sortList) {
+		return dao.find(condition, sortList);
+	}
+
+	@Override
+	public Dataset<E> find(Condition condition, Paginated paginated) {
+		return dao.find(condition, paginated);
+	}
 
 	@Override
 	public void save(E entity) {
-		dao.saveOrUpdate(entity);
+		dao.save(entity);
 	}
 
 	@SafeVarargs
