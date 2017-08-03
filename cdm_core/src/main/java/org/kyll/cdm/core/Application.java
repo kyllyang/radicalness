@@ -1,11 +1,13 @@
 package org.kyll.cdm.core;
 
 import com.longtop.efmp.cdg.srv.bs.ICdgSrvBS;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.remoting.httpinvoker.HttpComponentsHttpInvokerRequestExecutor;
 import org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean;
@@ -30,17 +32,17 @@ public class Application {
 	}
 
 	@Bean
-	public HttpComponentsHttpInvokerRequestExecutor httpComponentsHttpInvokerRequestExecutor() {
+	public HttpComponentsHttpInvokerRequestExecutor httpComponentsHttpInvokerRequestExecutor(@Value("${cdg.connectTimeout}") Integer connectTimeout, @Value("${cdg.readTimeout}") Integer readTimeout) {
 		HttpComponentsHttpInvokerRequestExecutor httpComponentsHttpInvokerRequestExecutor = new HttpComponentsHttpInvokerRequestExecutor();
-		httpComponentsHttpInvokerRequestExecutor.setConnectTimeout(300000);
-		httpComponentsHttpInvokerRequestExecutor.setReadTimeout(300000);
+		httpComponentsHttpInvokerRequestExecutor.setConnectTimeout(connectTimeout);
+		httpComponentsHttpInvokerRequestExecutor.setReadTimeout(readTimeout);
 		return httpComponentsHttpInvokerRequestExecutor;
 	}
 
-	@Bean("cdgService")
-	public HttpInvokerProxyFactoryBean httpInvokerProxyFactoryBean(HttpComponentsHttpInvokerRequestExecutor httpComponentsHttpInvokerRequestExecutor) {
+	@Bean
+	public HttpInvokerProxyFactoryBean cdgService(HttpComponentsHttpInvokerRequestExecutor httpComponentsHttpInvokerRequestExecutor, @Value("${cdg.serverUrl}") String serviceUrl) {
 		HttpInvokerProxyFactoryBean httpInvokerProxyFactoryBean = new HttpInvokerProxyFactoryBean();
-		httpInvokerProxyFactoryBean.setServiceUrl("");
+		httpInvokerProxyFactoryBean.setServiceUrl(serviceUrl);
 		httpInvokerProxyFactoryBean.setServiceInterface(ICdgSrvBS.class);
 		httpInvokerProxyFactoryBean.setHttpInvokerRequestExecutor(httpComponentsHttpInvokerRequestExecutor);
 		return httpInvokerProxyFactoryBean;

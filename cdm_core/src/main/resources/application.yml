@@ -5,13 +5,16 @@ spring:
   profiles: development
 datasource:
   oracle:
-    # jdbcUrl: jdbc:oracle:thin:@127.0.0.1:1521/orcl
-    jdbcUrl: jdbc:oracle:thin:@10.21.118.144:1521/orcl
+    jdbcUrl: jdbc:oracle:thin:@127.0.0.1:1521/orcl
+    # jdbcUrl: jdbc:oracle:thin:@10.21.118.144:1521/orcl
     username: fgptest1
     password: fgptest1
     driver-class-name: oracle.jdbc.OracleDriver
     validation-query: SELECT 1 FROM dual
 cdg:
+  serverUrl: http://10.20.133.43:7001/efmp-cdg-war/remoting/CdgService
+  connectTimeout: 300000
+  readTimeout: 300000
   appCode: CDM
   npcCode: 9968
   fcCcpcCode: 1000
@@ -29,6 +32,9 @@ datasource:
     driver-class-name: oracle.jdbc.OracleDriver
     validation-query: SELECT 1 FROM dual
 cdg:
+  serverUrl: http://10.20.133.43:7001/efmp-cdg-war/remoting/CdgService
+  connectTimeout: 300000
+  readTimeout: 300000
   appCode: CDM
   npcCode: 9968
   fcCcpcCode: 1000
@@ -37,4 +43,3 @@ cdg:
   nodeCode: 9072410001
 ---
 spring.output.ansi.enabled: DETECT
-name: ffff

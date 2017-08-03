@@ -29,8 +29,8 @@ import org.springframework.stereotype.Service;
 public class EcdsMsgFacade {
 	@Autowired
 	private CdgConfig cdgConfig;
-	@Autowired
 	@Qualifier("cdgService")
+	@Autowired
 	private ICdgSrvBS cdgService;
 	@Autowired
 	private EcdsMsgService ecdsMsgService;

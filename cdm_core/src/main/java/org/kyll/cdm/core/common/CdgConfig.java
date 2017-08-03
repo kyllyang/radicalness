@@ -24,23 +24,47 @@ public class CdgConfig {
 		return appCode;
 	}
 
+	public void setAppCode(String appCode) {
+		this.appCode = appCode;
+	}
+
 	public String getNpcCode() {
 		return npcCode;
+	}
+
+	public void setNpcCode(String npcCode) {
+		this.npcCode = npcCode;
 	}
 
 	public String getFcCcpcCode() {
 		return fcCcpcCode;
 	}
 
+	public void setFcCcpcCode(String fcCcpcCode) {
+		this.fcCcpcCode = fcCcpcCode;
+	}
+
 	public String getFcDrctBankCode() {
 		return fcDrctBankCode;
+	}
+
+	public void setFcDrctBankCode(String fcDrctBankCode) {
+		this.fcDrctBankCode = fcDrctBankCode;
 	}
 
 	public String getFcBankCode() {
 		return fcBankCode;
 	}
 
+	public void setFcBankCode(String fcBankCode) {
+		this.fcBankCode = fcBankCode;
+	}
+
 	public String getNodeCode() {
 		return nodeCode;
+	}
+
+	public void setNodeCode(String nodeCode) {
+		this.nodeCode = nodeCode;
 	}
 }

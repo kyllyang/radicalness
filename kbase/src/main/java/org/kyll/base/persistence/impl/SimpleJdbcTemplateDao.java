@@ -12,8 +12,7 @@ import java.util.Map;
  * User: Kyll
  * Date: 2017-08-03 16:40
  */
-@Repository
-public class SimpleJdbcTemplateDao implements Dao {
+public abstract class SimpleJdbcTemplateDao implements Dao {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
