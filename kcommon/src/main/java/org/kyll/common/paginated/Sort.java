@@ -6,7 +6,7 @@ package org.kyll.common.paginated;
  */
 public class Sort {
 	private String property;
-	private String direction;
+	private OrderBy orderBy;
 
 	public Sort() {
 	}
@@ -19,11 +19,25 @@ public class Sort {
 		this.property = property;
 	}
 
-	public String getDirection() {
-		return direction;
+	public OrderBy getOrderBy() {
+		return orderBy;
 	}
 
-	public void setDirection(String direction) {
-		this.direction = direction;
+	public void setOrderBy(OrderBy orderBy) {
+		this.orderBy = orderBy;
+	}
+
+	public static Sort asc(String property) {
+		Sort sort = new Sort();
+		sort.setProperty(property);
+		sort.setOrderBy(OrderBy.ASC);
+		return sort;
+	}
+
+	public static Sort desc(String property) {
+		Sort sort = new Sort();
+		sort.setProperty(property);
+		sort.setOrderBy(OrderBy.DESC);
+		return sort;
 	}
 }

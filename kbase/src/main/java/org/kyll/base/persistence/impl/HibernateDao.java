@@ -1,8 +1,8 @@
 package org.kyll.base.persistence.impl;
 
 import org.kyll.base.persistence.Condition;
-import org.kyll.base.persistence.Dao;
 import org.kyll.base.persistence.Entity;
+import org.kyll.base.persistence.EntityDao;
 import org.kyll.common.paginated.Dataset;
 import org.kyll.common.paginated.Paginated;
 import org.kyll.common.paginated.Sort;
@@ -10,13 +10,12 @@ import org.kyll.common.paginated.Sort;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 /**
  * User: Kyll
  * Date: 2017-08-01 08:49
  */
-public class HibernateDao<E extends Entity, P extends Serializable> implements Dao<E, P> {
+public class HibernateDao<E extends Entity, P extends Serializable> extends SimpleHibernateDao implements EntityDao<E, P> {
 	@Override
 	public E get(P id) {
 		return null;
@@ -24,6 +23,26 @@ public class HibernateDao<E extends Entity, P extends Serializable> implements D
 
 	@Override
 	public List<E> getAll() {
+		return null;
+	}
+
+	@Override
+	public E get(String fieldName, String fieldValue) {
+		return null;
+	}
+
+	@Override
+	public List<E> find(String fieldName, String fieldValue) {
+		return null;
+	}
+
+	@Override
+	public List<E> find(String fieldName, String fieldValue, Sort... sorts) {
+		return null;
+	}
+
+	@Override
+	public List<E> find(String fieldName, String fieldValue, List<Sort> sortList) {
 		return null;
 	}
 
@@ -89,21 +108,6 @@ public class HibernateDao<E extends Entity, P extends Serializable> implements D
 
 	@Override
 	public void delete(Collection<E> entities) {
-
-	}
-
-	@Override
-	public Map<String, Object> queryForOne(String sql) {
-		return null;
-	}
-
-	@Override
-	public List<Map<String, Object>> queryForList(String sql) {
-		return null;
-	}
-
-	@Override
-	public void execute(String sql) {
 
 	}
 }

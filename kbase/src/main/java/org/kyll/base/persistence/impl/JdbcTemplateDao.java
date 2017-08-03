@@ -1,29 +1,23 @@
 package org.kyll.base.persistence.impl;
 
 import org.kyll.base.persistence.Condition;
-import org.kyll.base.persistence.Dao;
 import org.kyll.base.persistence.Entity;
+import org.kyll.base.persistence.EntityDao;
 import org.kyll.common.Const;
 import org.kyll.common.paginated.Dataset;
 import org.kyll.common.paginated.Paginated;
 import org.kyll.common.paginated.Sort;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 /**
  * User: Kyll
  * Date: 2014-10-28 11:31
  */
-public class JdbcTemplateDao<E extends Entity, P extends Serializable> implements Dao<E, P> {
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
-
+public abstract class JdbcTemplateDao<E extends Entity, P extends Serializable> extends SimpleJdbcTemplateDao implements EntityDao<E, P> {
 	@Override
 	public E get(P id) {
 		return null;
@@ -37,6 +31,26 @@ public class JdbcTemplateDao<E extends Entity, P extends Serializable> implement
 	public int count(String sql) {
 		String countSql = this.createCountSql(sql);
 		return 0;
+	}
+
+	@Override
+	public E get(String fieldName, String fieldValue) {
+		return null;
+	}
+
+	@Override
+	public List<E> find(String fieldName, String fieldValue) {
+		return null;
+	}
+
+	@Override
+	public List<E> find(String fieldName, String fieldValue, Sort... sorts) {
+		return null;
+	}
+
+	@Override
+	public List<E> find(String fieldName, String fieldValue, List<Sort> sortList) {
+		return null;
 	}
 
 	@Override
@@ -117,21 +131,6 @@ public class JdbcTemplateDao<E extends Entity, P extends Serializable> implement
 	@Override
 	public void delete(Collection<E> entities) {
 
-	}
-
-	@Override
-	public Map<String, Object> queryForOne(String sql) {
-		return jdbcTemplate.queryForMap(sql);
-	}
-
-	@Override
-	public List<Map<String, Object>> queryForList(String sql) {
-		return jdbcTemplate.queryForList(sql);
-	}
-
-	@Override
-	public void execute(String sql) {
-		jdbcTemplate.execute(sql);
 	}
 
 	private String createCountSql(String sql) {

@@ -1,4 +1,4 @@
-package org.kyll.springbootfirst.module.web.ctrl;
+package org.kyll.springbootfirst.module.infa.inlet.ctrl;
 
 import org.kyll.springbootfirst.module.service.QueryService;
 import org.springframework.beans.factory.annotation.Autowired;

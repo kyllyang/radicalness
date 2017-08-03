@@ -1,0 +1,40 @@
+spring:
+  profiles.active: development
+---
+spring:
+  profiles: development
+datasource:
+  oracle:
+    # jdbcUrl: jdbc:oracle:thin:@127.0.0.1:1521/orcl
+    jdbcUrl: jdbc:oracle:thin:@10.21.118.144:1521/orcl
+    username: fgptest1
+    password: fgptest1
+    driver-class-name: oracle.jdbc.OracleDriver
+    validation-query: SELECT 1 FROM dual
+cdg:
+  appCode: CDM
+  npcCode: 9968
+  fcCcpcCode: 1000
+  fcDrctBankCode: 907241000012
+  fcBankCode: 907241000012
+  nodeCode: 9072410001
+---
+spring:
+  profiles: production
+datasource:
+  oracle:
+    jdbcUrl: jdbc:oracle:thin:@ORCL
+    username: cdm
+    password: cdm
+    driver-class-name: oracle.jdbc.OracleDriver
+    validation-query: SELECT 1 FROM dual
+cdg:
+  appCode: CDM
+  npcCode: 9968
+  fcCcpcCode: 1000
+  fcDrctBankCode: 907241000012
+  fcBankCode: 907241000012
+  nodeCode: 9072410001
+---
+spring.output.ansi.enabled: DETECT
+name: ffff

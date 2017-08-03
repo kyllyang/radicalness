@@ -14,6 +14,10 @@ import java.util.Date;
  * 传递 null 值，返回 null 值
  */
 public class DateUtil {
+	public static Date now() {
+		return new Date();
+	}
+
 	public static Date parseDate(String str) {
 		return parse(str, Const.PATTERN_DATE);
 	}

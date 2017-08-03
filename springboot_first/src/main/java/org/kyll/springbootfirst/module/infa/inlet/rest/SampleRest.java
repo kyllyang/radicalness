@@ -1,4 +1,4 @@
-package org.kyll.springbootfirst.module.web.rest;
+package org.kyll.springbootfirst.module.infa.inlet.rest;
 
 import org.kyll.springbootfirst.module.entity.User;
 import org.kyll.springbootfirst.module.service.UserService;

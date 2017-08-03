@@ -1,6 +1,5 @@
 package org.kyll.base.service;
 
-import lombok.extern.slf4j.Slf4j;
 import org.kyll.base.persistence.Condition;
 import org.kyll.base.persistence.Dao;
 import org.kyll.base.persistence.Entity;
@@ -49,5 +48,9 @@ public abstract class DefaultService<E extends Entity, P extends Serializable, D
 	@Override
 	public final void delete(P... ids) {
 		dao.delete(ids);
+	}
+
+	protected D getDao() {
+		return this.dao;
 	}
 }

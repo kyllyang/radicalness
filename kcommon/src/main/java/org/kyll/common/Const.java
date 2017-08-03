@@ -9,6 +9,8 @@ public class Const {
 	public static final Integer DEFAULT_PAGINATED_STARTRECORD = 0;
 	public static final Integer DEFAULT_PAGINATED_MAXRECORD = 20;
 	public static final Integer DEFAULT_PAGINATED_DUEPAGE = 4;
+	public static final String DEFAULT_PARTICIPATOR_PBOC = "PBOC";
+	public static final String ICDGSRVBS_RESULT_FAILURE = "PBOC";
 
 	// 模式
 	public static final String PATTERN_DATE = "yyyy-MM-dd";
@@ -19,14 +21,21 @@ public class Const {
 	// 固定值
 	public static final String UNDERLINE = "_";
 	public static final Integer INTEGER_ZERO = 0;
+	public static final Integer INTEGER_FOUR_THOUSAND = 4000;
 	public static String[] PURE_CHARS = new String[] {
 			"0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
 			"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
 			"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
 	};
 
+	// 类名、属性名
+	public static final String CLASS_FIELD_CODE = "code";
+	public static final String CLASS_FIELD_SORT = "sort";
+
 	// 专有名词
 	public static final String PN_DATE = "日期";
+	public static final String PN_DATA = "数据";
+	public static final String PN_MSG_TYPE = "报文类型";
 
 	// 异常信息
 	public static final String EC_MSG_PARSE = "%s解析错误 参数[%s] 格式[%s]";
@@ -36,4 +45,5 @@ public class Const {
 	public static final String EC_MSG_CLASSNOTFOUND = "无法找到类 参数[%s]";
 	public static final String EC_MSG_NOSUCHFIELD = "无法找到类中的属性 参数[class = %s, field = %s]";
 	public static final String EC_MSG_INVOCATIONTARGET = "调用目标错误 参数[class = %s, method = %s]";
+	public static final String EC_MSG_STATE_NOEXIST = "%s状态异常 %s不存在 参数[%s] 请参照[%s对应表]";
 }
