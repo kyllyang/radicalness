@@ -29,7 +29,6 @@ import org.springframework.stereotype.Service;
 public class EcdsMsgFacade {
 	@Autowired
 	private CdgConfig cdgConfig;
-	@Qualifier("cdgService")
 	@Autowired
 	private ICdgSrvBS cdgService;
 	@Autowired
@@ -63,7 +62,7 @@ public class EcdsMsgFacade {
 		BeanUtil.copyProperties(cdgResultVO, ecdsMsgResult);
 		ecdsMsgService.save(ecdsMsgResult);
 
-		if (CdgResult.SUCCESS.equals(cdgResultVO.getResultFlag())) {
+		if (CdgResult.SUCCESS == CdgResult.valueOf(cdgResultVO.getResultFlag())) {
 			ecdsMsg.setMsgIdId(cdgResultVO.getMsgIdId());
 			ecdsMsg.setMsgIdCreDtTm(cdgResultVO.getMsgIdCreDt() + cdgResultVO.getMsgIdCreTm());
 			ecdsMsgService.save(ecdsMsg);
