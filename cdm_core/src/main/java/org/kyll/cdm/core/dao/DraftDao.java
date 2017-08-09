@@ -1,7 +1,7 @@
 package org.kyll.cdm.core.dao;
 
-import org.kyll.base.persistence.impl.JdbcTemplateDao;
 import org.kyll.cdm.core.entity.Draft;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
  * Date: 2017-08-02 11:00
  */
 @Repository
-public class DraftDao extends JdbcTemplateDao<Draft, Long> {
+public interface DraftDao extends JpaRepository<Draft, Long> {
 }

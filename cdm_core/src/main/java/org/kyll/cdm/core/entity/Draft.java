@@ -1,16 +1,28 @@
 package org.kyll.cdm.core.entity;
 
-import org.kyll.base.persistence.Entity;
-
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Date;
+
+import static javax.persistence.GenerationType.SEQUENCE;
 
 /**
  * User: Kyll
  * Date: 2017-08-02 10:58
  * 票据信息
  */
-public class Draft extends Entity<Long> {
+@Entity
+@Table(name = "CORE_DRAFT")
+public class Draft  {
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_CORE_DRAFT" )
+	@SequenceGenerator(name = "SEQ_CORE_DRAFT", allocationSize = 30)
+	private Long id;
 	private String idNb;
 	private String sts;// 票据状态
 	private String period;// 票据生命周期。出票未有票号 0000;已经出票 0001;作废(004报文) 0002; 已结清 0003
@@ -25,6 +37,14 @@ public class Draft extends Entity<Long> {
 	private Long pyee;
 
 	public Draft() {
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getIdNb() {

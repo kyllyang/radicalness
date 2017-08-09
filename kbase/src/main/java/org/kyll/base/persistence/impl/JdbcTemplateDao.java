@@ -31,7 +31,7 @@ public abstract class JdbcTemplateDao<E extends Entity, P extends Serializable> 
 	@Override
 	public E get(P id) {
 		Sql sql = new Sql(entityClass);
-		sql.from().where(sql.column("id").eq(id)).toSql();
+	//	sql.from().where(sql.column("id").eq(id)).toSql();
 		return getJdbcTemplate().queryForObject("", entityClass);
 	}
 

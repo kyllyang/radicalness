@@ -26,17 +26,17 @@ public abstract class DefaultService<E extends Entity, P extends Serializable, D
 
 	@Override
 	public List<E> find(Condition condition, Sort... sorts) {
-		return dao.find(condition, sorts);
+		return dao.find(null);
 	}
 
 	@Override
 	public List<E> find(Condition condition, List<Sort> sortList) {
-		return dao.find(condition, sortList);
+		return dao.find(null);
 	}
 
 	@Override
 	public Dataset<E> find(Condition condition, Paginated paginated) {
-		return dao.find(condition, paginated);
+		return dao.find(null, paginated);
 	}
 
 	@Override

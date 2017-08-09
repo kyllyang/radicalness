@@ -22,12 +22,12 @@ public class HibernateDao<E extends Entity, P extends Serializable> extends Simp
 	}
 
 	@Override
-	public List<E> getAll() {
+	public E get(String fieldName, String fieldValue) {
 		return null;
 	}
 
 	@Override
-	public E get(String fieldName, String fieldValue) {
+	public List<E> getAll() {
 		return null;
 	}
 
@@ -47,17 +47,12 @@ public class HibernateDao<E extends Entity, P extends Serializable> extends Simp
 	}
 
 	@Override
-	public List<E> find(Condition condition, Sort... sorts) {
+	public List<E> find(String xql) {
 		return null;
 	}
 
 	@Override
-	public List<E> find(Condition condition, List<Sort> sortList) {
-		return null;
-	}
-
-	@Override
-	public Dataset<E> find(Condition condition, Paginated paginated) {
+	public Dataset<E> find(String xql, Paginated paginated) {
 		return null;
 	}
 

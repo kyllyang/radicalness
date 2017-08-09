@@ -21,18 +21,18 @@ public interface EntityDao<E extends Entity, P extends Serializable> {
 	E get(P id);
 
 	/**
-	 * 获取全部数据
-	 * @return 实体 LIST
-	 */
-	List<E> getAll();
-
-	/**
 	 * 获取一个实体
 	 * @param fieldName 实体属性名
 	 * @param fieldValue 属性值
 	 * @return 实体
 	 */
 	E get(String fieldName, String fieldValue);
+
+	/**
+	 * 获取全部数据
+	 * @return 实体 LIST
+	 */
+	List<E> getAll();
 
 	/**
 	 * 按条件查询数据
