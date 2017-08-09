@@ -1,4 +1,4 @@
-package org.kyll.common.util;
+package org.kyll.base.common;
 
 import org.kyll.common.Const;
 

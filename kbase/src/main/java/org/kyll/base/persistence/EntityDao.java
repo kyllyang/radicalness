@@ -61,28 +61,19 @@ public interface EntityDao<E extends Entity, P extends Serializable> {
 	List<E> find(String fieldName, String fieldValue, List<Sort> sortList);
 
 	/**
-	 * 按条件查询数据
-	 * @param condition 条件对象
-	 * @param sorts 排序
-	 * @return 实体 List
+	 * 查询数据
+	 * @param xql SQL 语句, HQL 语句
+	 * @return 实体 LIST
 	 */
-	List<E> find(Condition condition, Sort... sorts);
-
-	/**
-	 * 按条件查询数据
-	 * @param condition 条件对象
-	 * @param sortList 排序
-	 * @return 实体 List
-	 */
-	List<E> find(Condition condition, List<Sort> sortList);
+	List<E> find(String xql);
 
 	/**
 	 * 按条件查询数据并分页
-	 * @param condition 条件对象
+	 * @param xql SQL 语句, HQL 语句
 	 * @param paginated 分页对象
 	 * @return 带有分页信息的数据集
 	 */
-	Dataset<E> find(Condition condition, Paginated paginated);
+	Dataset<E> find(String xql, Paginated paginated);
 
 	/**
 	 * 存储实体到数据库

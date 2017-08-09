@@ -1,6 +1,7 @@
 package org.kyll.common.util;
 
 import org.kyll.common.Const;
+import strman.Strman;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,13 @@ public class StringUtil {
 		return false;
 	}
 
+	public static String join(List<String> strList, String separator) {
+		return join(strList.toArray(new String[strList.size()]), separator);
+	}
+
+	public static String join(String[] strs, String separator) {
+		return Strman.join(strs, separator);
+	}
 	/**
 	 * 将驼峰字符串中大写字母和数字前插入下划线
 	 * @param camel 驼峰字符串

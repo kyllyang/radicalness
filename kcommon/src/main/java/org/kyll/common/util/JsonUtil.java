@@ -14,6 +14,12 @@ public class JsonUtil {
 	}
 
 	public static String format(Object object) {
-		return null;
+		if (object == null) {
+			return null;
+		} else if (object instanceof String) {
+			return object.toString();
+		} else {
+			return null;
+		}
 	}
 }

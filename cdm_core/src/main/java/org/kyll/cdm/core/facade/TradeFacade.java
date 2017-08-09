@@ -1,5 +1,6 @@
 package org.kyll.cdm.core.facade;
 
+import lombok.extern.slf4j.Slf4j;
 import org.kyll.cdm.core.common.DraftPeriod;
 import org.kyll.cdm.core.common.EcdsMsgFactory;
 import org.kyll.cdm.core.common.EcdsMsgType;
@@ -31,14 +32,15 @@ import org.kyll.cdm.core.dto.SgnUpInf;
 import org.kyll.cdm.core.entity.Draft;
 import org.kyll.cdm.core.entity.Participator;
 import org.kyll.cdm.core.entity.Trade;
-import org.kyll.cdm.core.entity.ecdsmsg.EcdsMsg;
 import org.kyll.cdm.core.service.DraftService;
 import org.kyll.cdm.core.service.EcdsMsgRuleService;
 import org.kyll.cdm.core.service.ParticipatorService;
 import org.kyll.cdm.core.service.TradeService;
+import org.kyll.common.Const;
 import org.kyll.common.exception.BaseException;
 import org.kyll.common.util.BeanUtil;
 import org.kyll.common.util.DateUtil;
+import org.kyll.common.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,6 +48,7 @@ import org.springframework.stereotype.Service;
  * User: Kyll
  * Date: 2017-08-02 13:56
  */
+@Slf4j
 @Service
 public class TradeFacade {
 	@Autowired
@@ -68,6 +71,9 @@ public class TradeFacade {
 	 * @return 交易信息
 	 */
 	public Trade createRegister(ComrclDrft comrclDrft, Long drwr, Long accptr, Long pyee) throws BaseException {
+		log.info(String.format(Const.LOG_ECDS_TRADE_START, Const.PN_TRADE_REGISTER));
+
+		log.info(Const.LOG_VALIDATE_TRADE);
 		ecdsMsgRuleService.validate(EcdsMsgType.DRAFT_REGISTER, comrclDrft, drwr, accptr, pyee);
 
 		Draft draft = new Draft();
@@ -78,6 +84,8 @@ public class TradeFacade {
 		draft.setDrwr(drwr);
 		draft.setAccptr(accptr);
 		draft.setPyee(pyee);
+
+		log.info(String.format(Const.LOG_SAVE_DRAFT, JsonUtil.format(draft)));
 		draftService.save(draft);
 
 		Trade trade = new Trade();
@@ -89,11 +97,20 @@ public class TradeFacade {
 		trade.setReceiver(participatorService.getPboc().getId());
 		trade.setDirection(TradeDirection.SEND.getValue());
 		trade.setStatus(TradeStatus.NORMAL.getValue());
+
+		log.info(String.format(Const.LOG_SAVE_TRADE, JsonUtil.format(trade)));
 		tradeService.save(trade);
 
-		EcdsMsg ecdsMsg = EcdsMsgFactory.create(EcdsMsgType.DRAFT_REGISTER, comrclDrft, participatorService.get(drwr), participatorService.get(accptr), participatorService.get(pyee));
-		ecdsMsgFacade.send(trade, ecdsMsg);
+		ecdsMsgFacade.send(
+				trade,
+				EcdsMsgFactory.create(
+						EcdsMsgType.DRAFT_REGISTER,
+						comrclDrft,
+						participatorService.get(drwr),
+						participatorService.get(accptr),
+						participatorService.get(pyee)));
 
+		log.info(String.format(Const.LOG_ECDS_TRADE_END, Const.PN_TRADE_REGISTER));
 		return trade;
 	}
 

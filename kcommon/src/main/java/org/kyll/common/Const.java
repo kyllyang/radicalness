@@ -33,10 +33,40 @@ public class Const {
 	public static final String CLASS_FIELD_SORT = "sort";
 
 	// 专有名词
+	public static final String PN_TRADE_REGISTER = "出票信息登记";
+	public static final String PN_TRADE_ENDORSEMENT = "背书";
+	public static final String PN_TRADE_DISCOUNT = "贴现";
+	public static final String PN_TRADE_REPURCHASED_DISCOUNT = "回购式贴现赎回";
+	public static final String PN_TRADE_REDISCOUNT_WITH_COMMERCIAL_BANK = "转贴现";
+	public static final String PN_TRADE_REPURCHASED_REDISCOUNT_WITH_COMMERCIAL_BANK = "回购式转贴现赎回";
+	public static final String PN_TRADE_REDISCOUNT_WITH_CENTRAL_BANK = "再贴现";
+	public static final String PN_TRADE_REPURCHASED_REDISCOUNT_WITH_CENTRAL_BANK = "回购式再贴现赎回";
+	public static final String PN_TRADE_GUARANTEE = "保证";
+	public static final String PN_TRADE_COLLATERALIZATION = "质押";
+	public static final String PN_TRADE_REPURCHASED_COLLATERALIZATION = "质押解除";
+	public static final String PN_TRADE_PRESENTATION = "提示付款";
+	public static final String PN_TRADE_OVERDUE_PRESENTATION = "逾期提示付款";
+	public static final String PN_TRADE_RECOURSE_NOTIFICATION = "追索通知";
+	public static final String PN_TRADE_RECOURSE_AGREEMENT = "追索同意清偿";
+	public static final String PN_TRADE_CENTRAL_BANK_SELLING_DRAFTS = "央行卖出商业汇票";
 	public static final String PN_DATE = "日期";
 	public static final String PN_DATA = "数据";
 	public static final String PN_MSG_TYPE = "报文类型";
 
+	// 日志信息
+	public static final String LOG_SAVE_ECDS_MSG = "保存报文[%s]";
+	public static final String LOG_SAVE_TRADE_DETAIL = "保存交易明细[%s]";
+	public static final String LOG_SAVE_ECDS_MSG_RESULT = "保存报文结果[%s]";
+	public static final String LOG_SAVE_DRAFT = "保存票据[%s]";
+	public static final String LOG_SAVE_TRADE = "保存交易[%s]";
+	public static final String LOG_UPDATE_ECDS_MSG = "保存报文[%s]";
+	public static final String LOG_VALIDATE_TRADE = "验证交易";
+
+	public static final String LOG_ECDS_TRADE_START = "交易[%s]开始";
+	public static final String LOG_ECDS_TRADE_END = "交易[%s]结束";
+	public static final String LOG_ECDS_MSG_SEND_START = "发送报文开始[tradeId: %s, ecdsMsgType: %s]";
+	public static final String LOG_ECDS_MSG_SEND_END = "发送报文结束";
+	public static final String LOG_ECDS_MSG_SEND_ERROR = "发送报文错误";
 	// 异常信息
 	public static final String EC_MSG_PARSE = "%s解析错误 参数[%s] 格式[%s]";
 	public static final String EC_MSG_INSTANTIATION = "对象实例化错误 参数[%s]";

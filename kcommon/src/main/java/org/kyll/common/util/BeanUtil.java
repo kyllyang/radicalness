@@ -7,7 +7,11 @@ import org.springframework.cglib.beans.BeanCopier;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -95,6 +99,31 @@ public class BeanUtil {
 			throw new RuntimeException(new SystemException(String.format(Const.EC_MSG_INVOCATIONTARGET, object.getClass().toString(), method.getName()), e));
 		}
 		return result;
+	}
+
+	/**
+	 * 获取本类及其父类所有的属性名称列表
+	 * @param clazz 类
+	 * @return 属性名称列表
+	 */
+	public static List<String> getFieldNameList(Class clazz, Class suspendSuperClass) {
+		List<String> list = new ArrayList<>();
+		for (Field field : clazz.getDeclaredFields()) {
+			list.add(field.getName());
+		}
+
+		if (suspendSuperClass != null) {
+			Class superClass = clazz.getSuperclass();
+			list.addAll(getFieldNameList(superClass, superClass == suspendSuperClass ? null : suspendSuperClass));
+		}
+
+		return list;
+	}
+
+	public static Class getGenericEntityClass(Object object) {
+		ParameterizedType parameterizedType = (ParameterizedType) object.getClass().getGenericSuperclass();
+		Type[] types = parameterizedType.getActualTypeArguments();
+		return types == null ? null : (Class) types[0];
 	}
 
 	private static final Map<String, BeanCopier> BEAN_COPIER_MAP = new HashMap<String, BeanCopier>();

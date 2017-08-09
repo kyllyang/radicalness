@@ -1,13 +1,15 @@
 package org.kyll.base.persistence.impl;
 
-import org.kyll.base.persistence.Condition;
+import org.kyll.base.common.sql.Sql;
 import org.kyll.base.persistence.Entity;
 import org.kyll.base.persistence.EntityDao;
 import org.kyll.common.Const;
 import org.kyll.common.paginated.Dataset;
 import org.kyll.common.paginated.Paginated;
 import org.kyll.common.paginated.Sort;
+import org.kyll.common.util.BeanUtil;
 
+import javax.annotation.PostConstruct;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,9 +20,19 @@ import java.util.List;
  * Date: 2014-10-28 11:31
  */
 public abstract class JdbcTemplateDao<E extends Entity, P extends Serializable> extends SimpleJdbcTemplateDao implements EntityDao<E, P> {
+	private Class<E> entityClass;
+
+	@SuppressWarnings("unchecked")
+	@PostConstruct
+	private void init() {
+		entityClass = BeanUtil.getGenericEntityClass(this);
+	}
+
 	@Override
 	public E get(P id) {
-		return null;
+		Sql sql = new Sql(entityClass);
+		sql.from().where(sql.column("id").eq(id)).toSql();
+		return getJdbcTemplate().queryForObject("", entityClass);
 	}
 
 	@Override
@@ -54,24 +66,11 @@ public abstract class JdbcTemplateDao<E extends Entity, P extends Serializable> 
 	}
 
 	@Override
-	public List<E> find(Condition condition, Sort... sorts) {
-		return null;
-	}
-
-	@Override
-	public List<E> find(Condition condition, List<Sort> sortList) {
-		return null;
-	}
-
-	@Override
-	public Dataset<E> find(Condition condition, Paginated paginated) {
-		return null;
-	}
-
 	public List<E> find(String sql) {
 		return null;
 	}
 
+	@Override
 	public Dataset<E> find(String sql, Paginated paginated) {
 		int totalRecord = this.count(sql);
 		if (totalRecord > 0) {
