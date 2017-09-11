@@ -13,17 +13,34 @@ import java.util.UUID;
  * 字符串工具类
  */
 public class StringUtil {
+	public static String toEmpty(String str) {
+		return isBlank(str) ? "" : str;
+	}
+
+	public static String trim(String str) {
+		return isBlank(str) ? str : Strman.leftTrim(Strman.rightTrim(str));
+	}
+
+	public static boolean isBlank(String str) {
+		return Strman.isBlank(str);
+	}
+
 	public static boolean isNotBlank(String str) {
-		return false;
+		return !Strman.isBlank(str);
 	}
 
-	public static String join(List<String> strList, String separator) {
-		return join(strList.toArray(new String[strList.size()]), separator);
+	public static String join(List<?> list, String separator) {
+		return join(list.toArray(new Object[list.size()]), separator);
 	}
 
-	public static String join(String[] strs, String separator) {
+	public static String join(Object[] objects, String separator) {
+		String[] strs = new String[objects.length];
+		for (int i = 0; i < objects.length; i++) {
+			strs[i] = objects[i].toString();
+		}
 		return Strman.join(strs, separator);
 	}
+
 	/**
 	 * 将驼峰字符串中大写字母和数字前插入下划线
 	 * @param camel 驼峰字符串

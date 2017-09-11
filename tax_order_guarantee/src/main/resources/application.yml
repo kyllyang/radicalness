@@ -1,0 +1,26 @@
+spring:
+  profiles.active: development
+---
+spring:
+  profiles: development
+  datasource:
+    url: jdbc:oracle:thin:@10.20.133.28:1521/prod
+    username: ygz
+    password: ygz
+    driver-class-name: oracle.jdbc.OracleDriver
+  jpa:
+    database: oracle
+    show-sql: false
+---
+spring:
+  profiles: production
+  datasource:
+    url: jdbc:oracle:thin:@127.0.0.1:1521/epm
+    username: epm_usr_pln_test
+    password: epm_usr_pln_test
+    driver-class-name: oracle.jdbc.OracleDriver
+  jpa:
+    database: oracle
+    show-sql: true
+---
+spring.output.ansi.enabled: DETECT

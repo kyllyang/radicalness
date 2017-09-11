@@ -1,6 +1,6 @@
 package org.kyll.springbootfirst.module.condition;
 
-import org.kyll.base.persistence.Condition;
+import org.kyll.base.entity.Condition;
 
 /**
  * User: Kyll

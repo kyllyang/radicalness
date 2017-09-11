@@ -1,13 +1,11 @@
 package org.kyll.cdm.core.dao;
 
-import org.kyll.base.persistence.impl.JdbcTemplateDao;
 import org.kyll.cdm.core.entity.EcdsMsgRule;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  * User: Kyll
  * Date: 2017-08-02 15:58
  */
-@Repository
-public class EcdsMsgRuleDao extends JdbcTemplateDao<EcdsMsgRule, Long> {
+public interface EcdsMsgRuleDao extends JpaRepository<EcdsMsgRule, Long> {
 }

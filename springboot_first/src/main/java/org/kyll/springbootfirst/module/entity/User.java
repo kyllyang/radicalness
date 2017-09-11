@@ -1,6 +1,6 @@
 package org.kyll.springbootfirst.module.entity;
 
-import org.kyll.base.persistence.Entity;
+import org.kyll.base.entity.Entity;
 
 /**
  * User: Kyll

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="cdm_core" />
+        <module name="kbase" />
+        <module name="kcommon" />
+        <module name="tax_order_guarantee" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="cdm_core" target="1.8" />
+      <module name="kbase" target="1.8" />
+      <module name="kcommon" target="1.8" />
+      <module name="springboot_first" target="1.8" />
+      <module name="tax_order_guarantee" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

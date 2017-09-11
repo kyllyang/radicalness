@@ -1,56 +1,75 @@
 package org.kyll.base.service;
 
-import org.kyll.base.persistence.Condition;
-import org.kyll.base.persistence.Entity;
-import org.kyll.base.persistence.EntityDao;
+import org.kyll.base.condition.Condition;
+import org.kyll.base.repository.DefaultRepository;
 import org.kyll.common.paginated.Dataset;
 import org.kyll.common.paginated.Paginated;
 import org.kyll.common.paginated.Sort;
+import org.kyll.common.util.ArrayUtil;
+import org.kyll.common.util.ValueUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * User: Kyll
- * Date: 2017-07-30 03:12
+ * Date: 2017-09-06 15:57
  */
-public abstract class DefaultService<E extends Entity, P extends Serializable, D extends EntityDao<E, P>> implements Service<E, P> {
+public abstract class DefaultService<E, PK extends Serializable, Dao extends DefaultRepository<E, PK>> {
 	@Autowired
-	private D dao;
+	protected Dao dao;
 
-	@Override
-	public E get(P id) {
-		return dao.get(id);
+	public E get(PK id) {
+		return dao.getOne(id);
 	}
 
-	@Override
-	public List<E> find(Condition condition, Sort... sorts) {
-		return dao.find(null);
+	public E get(String fieldName, String fieldValue) {
+		return dao.findOne(getSpecification(fieldName, fieldValue)).orElse(null);
 	}
 
-	@Override
-	public List<E> find(Condition condition, List<Sort> sortList) {
-		return dao.find(null);
+	public List<E> find(Sort... sorts) {
+		return ArrayUtil.isBlank(sorts) ? dao.findAll() : dao.findAll(ValueUtil.toSpringDataDomainSort(sorts));
 	}
 
-	@Override
-	public Dataset<E> find(Condition condition, Paginated paginated) {
-		return dao.find(null, paginated);
+	public List<E> find(String fieldName, String fieldValue, Sort... sorts) {
+		return dao.findAll(getSpecification(fieldName, fieldValue), ValueUtil.toSpringDataDomainSort(sorts));
 	}
 
-	@Override
-	public void save(E entity) {
-		dao.save(entity);
+	public Dataset<E> find(Paginated paginated) {
+		Page<E> page = dao.findAll(PageRequest.of(paginated.getNextOnePage(), paginated.getMaxRecord(), ValueUtil.toSpringDataDomainSort(paginated.getSortList())));
+		return Dataset.create(paginated, page.getTotalElements(), page.getContent());
 	}
 
-	@SafeVarargs
-	@Override
-	public final void delete(P... ids) {
-		dao.delete(ids);
+	public List<Map<String, Object>> findAsMap(Sort... sorts) {
+		return null;
 	}
 
-	protected D getDao() {
-		return this.dao;
+	public List<Map<String, Object>> findAsMap(String fieldName, String fieldValue, Sort... sorts) {
+		return null;
+	}
+
+	public List<Map<String, Object>> findAsMap(Condition condition, Sort... sorts) {
+		return null;
+	}
+
+	public Dataset<Map<String, Object>> findAsMap(Condition condition, Paginated paginated) {
+		return null;
+	}
+
+	public void save(E e) {
+		dao.save(e);
+	}
+
+	public void delete(PK id) {
+		dao.deleteById(id);
+	}
+
+	private Specification<E> getSpecification(String fieldName, String fieldValue) {
+		return (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get(fieldName), fieldValue);
 	}
 }

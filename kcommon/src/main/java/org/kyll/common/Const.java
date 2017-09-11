@@ -76,4 +76,5 @@ public class Const {
 	public static final String EC_MSG_NOSUCHFIELD = "无法找到类中的属性 参数[class = %s, field = %s]";
 	public static final String EC_MSG_INVOCATIONTARGET = "调用目标错误 参数[class = %s, method = %s]";
 	public static final String EC_MSG_STATE_NOEXIST = "%s状态异常 %s不存在 参数[%s] 请参照[%s对应表]";
+	public static final String EC_MSG_UNSUPPORTED = "%s不支持";
 }

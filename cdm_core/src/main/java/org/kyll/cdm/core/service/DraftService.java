@@ -1,10 +1,10 @@
 package org.kyll.cdm.core.service;
 
-import org.kyll.base.service.DefaultService;
-import org.kyll.cdm.core.dao.DraftDao;
 import org.kyll.cdm.core.entity.Draft;
+import org.kyll.cdm.core.dao.DraftDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -13,6 +13,7 @@ import java.util.List;
  * Date: 2017-08-02 11:02
  */
 @Service
+@Transactional(readOnly = true)
 public class DraftService {
 	@Autowired
 	private DraftDao draftDao;

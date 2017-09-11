@@ -1,8 +1,7 @@
-package org.kyll.cdm.core.ctrl;
+package org.kyll.cdm.core.web;
 
 import org.kyll.cdm.core.facade.EcdsMsgFacade;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
