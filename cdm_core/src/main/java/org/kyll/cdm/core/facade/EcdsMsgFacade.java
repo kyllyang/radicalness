@@ -3,7 +3,6 @@ package org.kyll.cdm.core.facade;
 import com.longtop.efmp.cdg.srv.bs.ICdgSrvBS;
 import com.longtop.efmp.cdg.xmlvo.CdgResultVO;
 import lombok.extern.slf4j.Slf4j;
-import org.kyll.base.common.SqlUtil;
 import org.kyll.cdm.core.common.CdgConfig;
 import org.kyll.cdm.core.common.CdgResult;
 import org.kyll.cdm.core.common.Convertor;
@@ -20,7 +19,6 @@ import org.kyll.common.util.DateUtil;
 import org.kyll.common.util.JsonUtil;
 import org.kyll.common.util.ValueUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 

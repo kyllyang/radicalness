@@ -19,12 +19,8 @@ import java.util.List;
  * Date: 2017-09-06 15:57
  */
 public abstract class DefaultService<E, PK extends Serializable, Dao extends DefaultRepository<E, PK>> {
-	protected final Dao dao;
-
 	@Autowired
-	public DefaultService(Dao dao) {
-		this.dao = dao;
-	}
+	protected Dao dao;
 
 	public E get(PK id) {
 		return dao.getOne(id);
