@@ -1,6 +1,5 @@
 package org.kyll.base.service;
 
-import org.kyll.base.condition.Condition;
 import org.kyll.base.repository.DefaultRepository;
 import org.kyll.common.paginated.Dataset;
 import org.kyll.common.paginated.Paginated;
@@ -14,7 +13,6 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 
 /**
  * User: Kyll
@@ -43,22 +41,6 @@ public abstract class DefaultService<E, PK extends Serializable, Dao extends Def
 	public Dataset<E> find(Paginated paginated) {
 		Page<E> page = dao.findAll(PageRequest.of(paginated.getNextOnePage(), paginated.getMaxRecord(), ValueUtil.toSpringDataDomainSort(paginated.getSortList())));
 		return Dataset.create(paginated, page.getTotalElements(), page.getContent());
-	}
-
-	public List<Map<String, Object>> findAsMap(Sort... sorts) {
-		return null;
-	}
-
-	public List<Map<String, Object>> findAsMap(String fieldName, String fieldValue, Sort... sorts) {
-		return null;
-	}
-
-	public List<Map<String, Object>> findAsMap(Condition condition, Sort... sorts) {
-		return null;
-	}
-
-	public Dataset<Map<String, Object>> findAsMap(Condition condition, Paginated paginated) {
-		return null;
 	}
 
 	public void save(E e) {
