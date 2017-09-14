@@ -13,7 +13,12 @@ import java.util.UUID;
  * 字符串工具类
  */
 public class StringUtil {
-	public static String toEmpty(String str) {
+	/**
+	 * 如果字符串为 null， 则返回 ""
+	 * @param str 字符串
+	 * @return 非 null 字符串
+	 */
+	public static String toEmptyIf(String str) {
 		return isBlank(str) ? "" : str;
 	}
 
@@ -39,6 +44,34 @@ public class StringUtil {
 			strs[i] = objects[i].toString();
 		}
 		return Strman.join(strs, separator);
+	}
+
+	public static String[] split(String str, String... delimiteds) {
+		char c = delimiteds[0].charAt(0);
+
+		int pos = str.indexOf(c);
+		if (pos < 0) {
+			return new String[]{str};
+		}
+		List<String> strList = new ArrayList<>();
+		if (pos == 0) {
+			strList.add("");
+		} else {
+			strList.add(str.substring(0, pos));
+		}
+		while (pos >= 0) {
+			int end = str.indexOf(c, pos + 1);
+			if (end < 0) {
+				end = str.length();
+			}
+			if (end - pos == 1) {
+				strList.add("");
+			} else {
+				strList.add(str.substring(pos + 1, end));
+			}
+			pos = str.indexOf(c, pos + 1);
+		}
+		return strList.toArray(new String[strList.size()]);
 	}
 
 	/**

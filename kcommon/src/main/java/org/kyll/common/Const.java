@@ -28,6 +28,14 @@ public class Const {
 			"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
 	};
 
+	// 符号
+	public static final String SYMBOL_LINE_SEPARATOR = System.getProperty("line.separator");
+	public static final String SYMBOL_PERCENT = "%";
+	public static final String SYMBOL_DOT = ".";
+	public static final String SYMBOL_BRACKET_LEFT = "(";
+	public static final String SYMBOL_BRACKET_RIGHT = ")";
+	public static final String SYMBOL_COLON = ":";
+
 	// 类名、属性名
 	public static final String CLASS_FIELD_CODE = "code";
 	public static final String CLASS_FIELD_SORT = "sort";
@@ -77,4 +85,5 @@ public class Const {
 	public static final String EC_MSG_INVOCATIONTARGET = "调用目标错误 参数[class = %s, method = %s]";
 	public static final String EC_MSG_STATE_NOEXIST = "%s状态异常 %s不存在 参数[%s] 请参照[%s对应表]";
 	public static final String EC_MSG_UNSUPPORTED = "%s不支持";
+	public static final String EC_STARTER = "at ";
 }
