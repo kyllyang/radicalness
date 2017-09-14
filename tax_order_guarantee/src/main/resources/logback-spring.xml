@@ -30,7 +30,7 @@
 		<appender-ref ref="CONSOLE"/>
 		<appender-ref ref="ROLLINGFILE"/>
 	</logger>
-	<logger name="org.kyll.orderguarantee" level="DEBUG" additivity="false">
+	<logger name="org.kyll.tax.orderguarantee" level="DEBUG" additivity="false">
 		<appender-ref ref="CONSOLE"/>
 		<appender-ref ref="ROLLINGFILE"/>
 	</logger>
