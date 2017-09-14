@@ -13,6 +13,7 @@ import org.kyll.common.util.DateUtil;
 import org.kyll.common.util.ExcelUtil;
 import org.kyll.common.util.StringUtil;
 import org.kyll.tax.orderguarantee.domain.ComAccMsg;
+import org.kyll.tax.orderguarantee.domain.OpenBillMsg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -36,6 +37,8 @@ public class ExcelService {
 
 	@Autowired
 	private ComAccMsgService comAccMsgService;
+	@Autowired
+	private OpenBillMsgService openBillMsgService;
 
 	public void read() {
 		XSSFWorkbook workbook;
@@ -123,7 +126,7 @@ public class ExcelService {
 		List<RawData> rawDataList = new ArrayList<>();
 
 		XSSFSheet sheet = getSheet(workbook);
-		for (int i = 1, lastRowNum = sheet.getLastRowNum(); i < lastRowNum; i++) {
+		for (int i = 1, lastRowNum = sheet.getLastRowNum(); i <= lastRowNum; i++) {
 			Row row = sheet.getRow(i);
 
 			RawData rawData = new RawData();
@@ -134,6 +137,7 @@ public class ExcelService {
 			rawDataList.add(rawData);
 		}
 
+		List<String> xmlList = new ArrayList<>();
 		for (RawData rawData : rawDataList) {
 			System.out.println(rawData);
 
@@ -143,9 +147,10 @@ public class ExcelService {
 				continue;
 			}
 
-			String xml = createXml(rawData, comAccMsg);
-			System.out.println(xml);
+			xmlList.add(createXml(rawData, comAccMsg));
 		}
+
+		xmlList.forEach(System.out::println);
 	}
 
 	private String createXml(RawData rawData, ComAccMsg comAccMsg) {
@@ -154,7 +159,21 @@ public class ExcelService {
 
 		if (comAccs == null) {
 			System.out.println(comAccMsg);
+			return null;
 		}
+
+		int dtlSeqno = 0;
+		List<OpenBillMsg> openBillMsgList = openBillMsgService.findLike("tranSeqno", rawData.getTranSeqno());
+		for (OpenBillMsg openBillMsg : openBillMsgList) {
+			String[] ss = StringUtil.split(openBillMsg.getTranSeqno(), "_");
+			if (ss.length > 1) {
+				int tmpDtlSeqno = Integer.parseInt(ss[ss.length - 1]);
+				if (tmpDtlSeqno > dtlSeqno) {
+					dtlSeqno = tmpDtlSeqno;
+				}
+			}
+		}
+		dtlSeqno++;
 
 		Document document = DocumentHelper.createDocument();
 		document.setXMLEncoding("GBK");
@@ -163,7 +182,7 @@ public class ExcelService {
 		Element dto = packet.addElement("BODY").addElement("CustomerAndPolicyPlanDto");
 		dto.addElement("tran_date").addText(DateUtil.formatDateCompact(now));
 		dto.addElement("tran_seqno").addText(rawData.getTranSeqno());
-		dto.addElement("dtl_seqno").addText("1");
+		dto.addElement("dtl_seqno").addText(String.valueOf(dtlSeqno));
 		dto.addElement("acc").addText(comAccs[0]);
 		dto.addElement("curr_type").addText("001");
 		dto.addElement("acc_inst").addText("99010000");
@@ -187,25 +206,24 @@ public class ExcelService {
 		dto.addElement("per_open_inst").addText("");
 		dto.addElement("per_paper_type").addText("");
 		dto.addElement("per_paper_no").addText("");
-		dto.addElement("com_acc").addText(StringUtil.toEmpty(StringUtil.trim(comAccMsg.getAcc())));
-		dto.addElement("com_acc_name").addText(StringUtil.toEmpty(StringUtil.trim(comAccMsg.getAccName())));
-		dto.addElement("com_cstm_id").addText(StringUtil.toEmpty(StringUtil.trim(comAccMsg.getCstmId())));
-		dto.addElement("com_open_inst").addText(StringUtil.toEmpty(StringUtil.trim(comAccMsg.getOpenInst())));
-		dto.addElement("com_permit_no").addText(StringUtil.toEmpty(StringUtil.trim(comAccMsg.getPermitNo())));
-		dto.addElement("com_org_inst_code").addText(StringUtil.toEmpty(StringUtil.trim(comAccMsg.getOrgInstCode())));
-		dto.addElement("com_acc_addr").addText(StringUtil.toEmpty(StringUtil.trim(comAccMsg.getAccAddr())));
-		dto.addElement("com_acc_phone").addText(StringUtil.toEmpty(StringUtil.trim(comAccMsg.getAccPhone())));
-		dto.addElement("com_taxpayer_id").addText(StringUtil.toEmpty(StringUtil.trim(comAccMsg.getTaxpayerId())));
-		dto.addElement("com_taxpayer_name").addText(StringUtil.toEmpty(StringUtil.trim(comAccMsg.getTaxpayerName())));
-		dto.addElement("com_login_type").addText(StringUtil.toEmpty(StringUtil.trim(comAccMsg.getLoginType())));
-		dto.addElement("com_open_acc_bank").addText(StringUtil.toEmpty(StringUtil.trim(comAccMsg.getOpenAccBank())));
-		dto.addElement("com_open_acc").addText(StringUtil.toEmpty(StringUtil.trim(comAccMsg.getOpenAcc())));
+		dto.addElement("com_acc").addText(StringUtil.toEmptyIf(StringUtil.trim(comAccMsg.getAcc())));
+		dto.addElement("com_acc_name").addText(StringUtil.toEmptyIf(StringUtil.trim(comAccMsg.getAccName())));
+		dto.addElement("com_cstm_id").addText(StringUtil.toEmptyIf(StringUtil.trim(comAccMsg.getCstmId())));
+		dto.addElement("com_open_inst").addText(StringUtil.toEmptyIf(StringUtil.trim(comAccMsg.getOpenInst())));
+		dto.addElement("com_permit_no").addText(StringUtil.toEmptyIf(StringUtil.trim(comAccMsg.getPermitNo())));
+		dto.addElement("com_org_inst_code").addText(StringUtil.toEmptyIf(StringUtil.trim(comAccMsg.getOrgInstCode())));
+		dto.addElement("com_acc_addr").addText(StringUtil.toEmptyIf(StringUtil.trim(comAccMsg.getAccAddr())));
+		dto.addElement("com_acc_phone").addText(StringUtil.toEmptyIf(StringUtil.trim(comAccMsg.getAccPhone())));
+		dto.addElement("com_taxpayer_id").addText(StringUtil.toEmptyIf(StringUtil.trim(comAccMsg.getTaxpayerId())));
+		dto.addElement("com_taxpayer_name").addText(StringUtil.toEmptyIf(StringUtil.trim(comAccMsg.getTaxpayerName())));
+		dto.addElement("com_login_type").addText(StringUtil.toEmptyIf(StringUtil.trim(comAccMsg.getLoginType())));
+		dto.addElement("com_open_acc_bank").addText(StringUtil.toEmptyIf(StringUtil.trim(comAccMsg.getOpenAccBank())));
+		dto.addElement("com_open_acc").addText(StringUtil.toEmptyIf(StringUtil.trim(comAccMsg.getOpenAcc())));
 		dto.addElement("attribute1").addText(rawData.getTranSeqno());
 		dto.addElement("attribute2").addText("");
 		dto.addElement("attribute3").addText("");
 		dto.addElement("attribute4").addText("");
 		dto.addElement("attribute5").addText("");
-
 
 		return document.asXML();
 	}

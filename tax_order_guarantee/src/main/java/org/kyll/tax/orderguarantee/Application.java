@@ -12,11 +12,10 @@ import org.springframework.context.ConfigurableApplicationContext;
 @SpringBootApplication
 public class Application {
 	public static void main(String[] args) {
-
 		ConfigurableApplicationContext context = SpringApplication.run(Application.class, args);
 
 		ExcelService excelService = context.getBean(ExcelService.class);
-		excelService.read("C:\\Users\\Administrator\\OneDrive\\工作\\融通\\项目\\增值税\\预约保单手工入库\\01、7月青岛系统录入结果 - 副本.xlsx");
+		excelService.read("C:\\Users\\Administrator\\OneDrive\\工作\\融通\\项目\\增值税\\预约保单手工入库\\2017-09-13\\数据.xlsx");
 	//	excelService.read();
 	}
 }
