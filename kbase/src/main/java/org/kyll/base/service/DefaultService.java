@@ -27,7 +27,7 @@ public abstract class DefaultService<E, PK extends Serializable, Dao extends Def
 	}
 
 	public E get(String fieldName, String fieldValue) {
-		return dao.findOne(getSpecification(fieldName, fieldValue)).orElse(null);
+		return dao.findOne(getEqualSpecification(fieldName, fieldValue)).orElse(null);
 	}
 
 	public List<E> find(Sort... sorts) {
@@ -35,7 +35,11 @@ public abstract class DefaultService<E, PK extends Serializable, Dao extends Def
 	}
 
 	public List<E> find(String fieldName, String fieldValue, Sort... sorts) {
-		return dao.findAll(getSpecification(fieldName, fieldValue), ValueUtil.toSpringDataDomainSort(sorts));
+		return dao.findAll(getEqualSpecification(fieldName, fieldValue), ValueUtil.toSpringDataDomainSort(sorts));
+	}
+
+	public List<E> findLike(String fieldName, String fieldValue, Sort... sorts) {
+		return dao.findAll(getLikeSpecification(fieldName, fieldValue), ValueUtil.toSpringDataDomainSort(sorts));
 	}
 
 	public Dataset<E> find(Paginated paginated) {
@@ -51,7 +55,11 @@ public abstract class DefaultService<E, PK extends Serializable, Dao extends Def
 		dao.deleteById(id);
 	}
 
-	private Specification<E> getSpecification(String fieldName, String fieldValue) {
+	private Specification<E> getEqualSpecification(String fieldName, String fieldValue) {
 		return (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get(fieldName), fieldValue);
+	}
+
+	private Specification<E> getLikeSpecification(String fieldName, String fieldValue) {
+		return (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.like(root.get(fieldName), ValueUtil.toSqlLike(fieldValue));
 	}
 }
