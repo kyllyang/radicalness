@@ -316,6 +316,7 @@ public class ExcelService {
 
 	private static Map<String, String[]> comAccMap = new HashMap<>();
 	static {
+		comAccMap.put("1007295187", new String[]{"22001460200059111888", "1007295187", "603100104"});
 		comAccMap.put("1008333322", new String[]{"802690200059653", "1008333322", "603100104"});
 		comAccMap.put("1007260742", new String[]{"431900423310766", "1007260742", "6031001"});
 		comAccMap.put("1007268801", new String[]{"010101201098777888", "1007268801", "6031001"});
