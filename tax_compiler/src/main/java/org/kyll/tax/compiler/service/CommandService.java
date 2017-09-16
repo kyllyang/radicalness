@@ -6,6 +6,11 @@ import org.kyll.tax.compiler.domain.OperFile;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +29,7 @@ public class CommandService {
 
 	private void mkdir(List<OperFile> operFileList) {
 		for (OperFile operFile : operFileList) {
-			File file = new File(operFile.getPath());
+			File file = new File(operFile.getTargetPath());
 			if (file.exists()) {
 				log.info("目录已存在 " + file);
 			} else {
@@ -39,14 +44,39 @@ public class CommandService {
 
 	private void copy(List<OperFile> operFileList) {
 		for (OperFile operFile : operFileList) {
-			File file = new File(operFile.getPath());
-			log.info("复制文件 " + file);
+			String path = operFile.getPath();
+			String targetPath = operFile.getTargetPath();
+
+			log.info("复制文件 " + path + " ->" + targetPath);
+			if (path.endsWith(".bizx")) {
+
+			} else {
+				File targetFile = new File(targetPath);
+				if (!targetFile.exists()) {
+					try {
+						if (targetFile.createNewFile()) {
+							log.info("文件建立 " + targetFile);
+						} else {
+							log.info("文件建立失败 " + targetFile);
+						}
+					} catch (IOException e) {
+						log.error("文件建立异常", e);
+					}
+				}
+
+				try (FileChannel sourceFileChannel = new FileInputStream(new File(path)).getChannel();
+				     FileChannel targetFileChannel = new FileOutputStream(targetFile).getChannel()) {
+					targetFileChannel.write(sourceFileChannel.map(FileChannel.MapMode.READ_ONLY, 0, sourceFileChannel.size()));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 
 	private void delete(List<OperFile> operFileList) {
 		for (OperFile operFile : operFileList) {
-			File file = new File(operFile.getPath());
+			File file = new File(operFile.getTargetPath());
 			if (file.delete()) {
 				log.info("删除文件 " + file);
 			} else {
