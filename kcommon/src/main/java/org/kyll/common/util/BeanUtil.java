@@ -25,7 +25,7 @@ public class BeanUtil {
 	 * @param orig 源对象
 	 */
 	public static void copyProperties(Object orig, Object dest) {
-		String beanKey = dest.getClass().getName() + Const.UNDERLINE + orig.getClass().getName();
+		String beanKey = dest.getClass().getName() + Const.SYMBOL_UNDERLINE + orig.getClass().getName();
 
 		BeanCopier copier = BEAN_COPIER_MAP.get(beanKey);
 		if (copier == null) {

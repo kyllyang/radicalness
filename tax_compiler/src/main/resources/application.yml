@@ -1,0 +1,10 @@
+spring:
+  profiles.active: development
+---
+spring:
+  profiles: development
+---
+spring:
+  profiles: production
+---
+spring.output.ansi.enabled: DETECT

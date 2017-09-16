@@ -19,7 +19,7 @@ public class StringUtil {
 	 * @return 非 null 字符串
 	 */
 	public static String toEmptyIf(String str) {
-		return isBlank(str) ? "" : str;
+		return isBlank(str) ? Const.STRING_EMPTY : str;
 	}
 
 	public static String trim(String str) {
@@ -32,6 +32,10 @@ public class StringUtil {
 
 	public static boolean isNotBlank(String str) {
 		return !Strman.isBlank(str);
+	}
+
+	public static String getFirstChar(String str) {
+		return isBlank(str) ? str : String.valueOf(str.charAt(0));
 	}
 
 	public static String join(List<?> list, String separator) {

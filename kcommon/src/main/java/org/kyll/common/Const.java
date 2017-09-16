@@ -19,7 +19,7 @@ public class Const {
 	public static final String PATTERN_DATE_TIME_COMPACT = "yyyyMMddHHmmss";
 
 	// 固定值
-	public static final String UNDERLINE = "_";
+	public static final String STRING_EMPTY = "";
 	public static final Integer INTEGER_ZERO = 0;
 	public static final Integer INTEGER_FOUR_THOUSAND = 4000;
 	public static String[] PURE_CHARS = new String[] {
@@ -30,6 +30,8 @@ public class Const {
 
 	// 符号
 	public static final String SYMBOL_LINE_SEPARATOR = System.getProperty("line.separator");
+	public static final String SYMBOL_FILE_SEPARATOR = System.getProperty("file.separator");
+	public static final String SYMBOL_UNDERLINE = "_";
 	public static final String SYMBOL_PERCENT = "%";
 	public static final String SYMBOL_DOT = ".";
 	public static final String SYMBOL_BRACKET_LEFT = "(";
