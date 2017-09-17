@@ -19,8 +19,8 @@ import java.util.List;
 @Slf4j
 @Component
 public class SvnRowService {
-	public List<SvnRow> readSvnRowList(String workPath) {
-		Config.CMD_SVN_STATUS[2] = workPath;
+	public List<SvnRow> readSvnRowList() {
+		Config.CMD_SVN_STATUS[2] = Config.PROJECT_PATH;
 
 		List<String> rowList = new ArrayList<>();
 		Process process = null;
