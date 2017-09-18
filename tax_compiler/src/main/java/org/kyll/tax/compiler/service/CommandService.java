@@ -151,13 +151,18 @@ public class CommandService {
 	}
 
 	private void generateEos(String targetPath) {
-		try (FileWriter fileWriter = new FileWriter(new File(targetPath).getParent() + Const.SYMBOL_FILE_SEPARATOR + ".eos")) {
-			fileWriter.write("#" + Const.SYMBOL_LINE_SEPARATOR);
-			fileWriter.write("#" + DateUtil.now() + Const.SYMBOL_LINE_SEPARATOR);
-			fileWriter.write("componentType=com.primeton.component.eosComponent" + Const.SYMBOL_LINE_SEPARATOR);
-			fileWriter.write("componentVersion=7.0.0.0" + Const.SYMBOL_LINE_SEPARATOR);
-		} catch (IOException e) {
-			log.error(".eos 文件生成异常", e);
+		File file = new File( new File(targetPath).getParent() + Const.SYMBOL_FILE_SEPARATOR + ".eos");
+		if (file.exists()) {
+			log.info(".eos 文件已存在，跳过");
+		} else {
+			try (FileWriter fileWriter = new FileWriter(file)) {
+				fileWriter.write("#" + Const.SYMBOL_LINE_SEPARATOR);
+				fileWriter.write("#" + DateUtil.now() + Const.SYMBOL_LINE_SEPARATOR);
+				fileWriter.write("componentType=com.primeton.component.eosComponent" + Const.SYMBOL_LINE_SEPARATOR);
+				fileWriter.write("componentVersion=7.0.0.0" + Const.SYMBOL_LINE_SEPARATOR);
+			} catch (IOException e) {
+				log.error(".eos 文件生成异常", e);
+			}
 		}
 	}
 
