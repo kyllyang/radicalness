@@ -151,51 +151,41 @@ public class CommandService {
 	}
 
 	private void generateEos(String targetPath) {
-		File file = new File( new File(targetPath).getParent() + Const.SYMBOL_FILE_SEPARATOR + ".eos");
-		if (file.exists()) {
-			log.info(".eos 文件已存在，跳过");
-		} else {
-			try (FileWriter fileWriter = new FileWriter(file)) {
-				fileWriter.write("#" + Const.SYMBOL_LINE_SEPARATOR);
-				fileWriter.write("#" + DateUtil.now() + Const.SYMBOL_LINE_SEPARATOR);
-				fileWriter.write("componentType=com.primeton.component.eosComponent" + Const.SYMBOL_LINE_SEPARATOR);
-				fileWriter.write("componentVersion=7.0.0.0" + Const.SYMBOL_LINE_SEPARATOR);
-			} catch (IOException e) {
-				log.error(".eos 文件生成异常", e);
-			}
+		try (FileWriter fileWriter = new FileWriter(new File(targetPath).getParent() + Const.SYMBOL_FILE_SEPARATOR + ".eos")) {
+			fileWriter.write("#" + Const.SYMBOL_LINE_SEPARATOR);
+			fileWriter.write("#" + DateUtil.now() + Const.SYMBOL_LINE_SEPARATOR);
+			fileWriter.write("componentType=com.primeton.component.eosComponent" + Const.SYMBOL_LINE_SEPARATOR);
+			fileWriter.write("componentVersion=7.0.0.0" + Const.SYMBOL_LINE_SEPARATOR);
+		} catch (IOException e) {
+			log.error(".eos 文件生成异常", e);
 		}
 	}
 
 	private void generateEosComponentType(String targetPath) {
 		File parent = new File(targetPath).getParentFile();
-		File file = new File( parent.getPath() + Const.SYMBOL_FILE_SEPARATOR + parent.getName() + ".eosComponentType");
 
-		if (file.exists()) {
-			log.info("eosComponentType 文件已存在，跳过");
-		} else {
-			Document document = DocumentHelper.createDocument();
-			Element eosComponentTypeInfo = document.addElement("com.primeton.studio.component.core.EosComponentTypeInfo");
-			Element description = eosComponentTypeInfo.addElement("description");
-			description.addElement("version").addText("6.0");
-			description.addElement("displayName").addText(parent.getName());
-			description.addElement("author").addText("CC");
-			description.addElement("createdTime").addText(DateUtil.formatDatetime(DateUtil.now()));
-			description.addElement("description");
-			description.addElement("detailDescription");
-			description.addElement("demo");
-			description.addElement("links");
-			eosComponentTypeInfo.addElement("serviceReferences");
+		Document document = DocumentHelper.createDocument();
+		Element eosComponentTypeInfo = document.addElement("com.primeton.studio.component.core.EosComponentTypeInfo");
+		Element description = eosComponentTypeInfo.addElement("description");
+		description.addElement("version").addText("6.0");
+		description.addElement("displayName").addText(parent.getName());
+		description.addElement("author").addText("CC");
+		description.addElement("createdTime").addText(DateUtil.formatDatetime(DateUtil.now()));
+		description.addElement("description");
+		description.addElement("detailDescription");
+		description.addElement("demo");
+		description.addElement("links");
+		eosComponentTypeInfo.addElement("serviceReferences");
 
-			OutputFormat outputFormat = OutputFormat.createPrettyPrint();
-			outputFormat.setLineSeparator(Const.SYMBOL_LINE_SEPARATOR);
+		OutputFormat outputFormat = OutputFormat.createPrettyPrint();
+		outputFormat.setLineSeparator(Const.SYMBOL_LINE_SEPARATOR);
 
-			try (FileWriter fileWriter = new FileWriter(file)) {
-				XMLWriter xmlWriter = new XMLWriter(fileWriter, outputFormat);
-				xmlWriter.write(document);
-				xmlWriter.close();
-			} catch (IOException e) {
-				log.error("eosComponentType 文件生成异常", e);
-			}
+		try (FileWriter fileWriter = new FileWriter(parent.getPath() + Const.SYMBOL_FILE_SEPARATOR + parent.getName() + ".eosComponentType")) {
+			XMLWriter xmlWriter = new XMLWriter(fileWriter, outputFormat);
+			xmlWriter.write(document);
+			xmlWriter.close();
+		} catch (IOException e) {
+			log.error("eosComponentType 文件生成异常", e);
 		}
 	}
 }

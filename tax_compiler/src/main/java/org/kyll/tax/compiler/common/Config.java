@@ -11,6 +11,7 @@ public class Config {
 	public static final String TARGET_PATH = "C:\\Users\\Administrator\\work\\temp\\tax\\";
 	public static final String CLASS_TARGET_PATH = TARGET_PATH + "war\\WEB-INF\\classes\\";
 	public static final String WEB_TARGET_PATH = TARGET_PATH + "war\\tax\\";
+	public static final String BIZ_TARGET_PATH = TARGET_PATH + "war\\WEB-INF\\_srv\\work\\user\\com.gl.tax\\";
 
 	public static final String[] CMD_SVN_STATUS = {"svn", "status", null};
 	public static final String[] CMD_JAR_WAR = {"C:\\Program Files\\Java\\jdk1.6.0_18\\bin\\jar", "cvf", "..\\ear\\default.war", "*"};

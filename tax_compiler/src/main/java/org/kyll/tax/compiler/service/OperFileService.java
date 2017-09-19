@@ -31,6 +31,7 @@ public class OperFileService {
 						operFile.setTargetPath(Config.WEB_TARGET_PATH + path.substring(path.indexOf("\\src\\webcontent\\") + 16));
 					} else {
 						operFile.setTargetPath(Config.CLASS_TARGET_PATH + path.substring(path.indexOf("\\src\\") + 5));
+						operFile.setTargetPath(Config.BIZ_TARGET_PATH + path.substring(path.indexOf("\\src\\") + 5));
 					}
 					operFileList.add(operFile);
 				}
@@ -50,7 +51,7 @@ public class OperFileService {
 
 					String filePath = path.substring(path.indexOf("\\src\\") + 5);
 					operFile.setPath(Config.CLASS_SOURCE_PATH + filePath);
-					operFile.setTargetPath(Config.CLASS_TARGET_PATH + filePath.substring(0, filePath.length() - 1));
+					operFile.setTargetPath(Config.BIZ_TARGET_PATH + filePath.substring(0, filePath.length() - 1));
 
 					operFileList.add(operFile);
 				} else if (path.endsWith(".jsp")) {
