@@ -21,7 +21,7 @@ public class JarService {
 
 		Process process = null;
 		try {
-			process = Runtime.getRuntime().exec(Config.CMD_JAR_WAR, null, new File(Config.TARGET_PATH + "war"));
+			process = Runtime.getRuntime().exec(Config.CMD_JAR_WAR, null, new File(Config.TARGET_PATH));
 		} catch (IOException e) {
 			log.error("jar war 命令执行异常", e);
 			System.exit(1);
@@ -43,7 +43,7 @@ public class JarService {
 
 		Process process = null;
 		try {
-			process = Runtime.getRuntime().exec(Config.CMD_JAR_EAR, null, new File(Config.TARGET_PATH + "ear"));
+			process = Runtime.getRuntime().exec(Config.CMD_JAR_EAR, null, new File(Config.EAR_PATH));
 		} catch (IOException e) {
 			log.error("jar ear 命令执行异常", e);
 			System.exit(1);

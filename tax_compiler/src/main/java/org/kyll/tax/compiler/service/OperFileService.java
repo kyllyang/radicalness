@@ -30,8 +30,7 @@ public class OperFileService {
 					if (path.contains("\\src\\webcontent\\")) {
 						operFile.setTargetPath(Config.WEB_TARGET_PATH + path.substring(path.indexOf("\\src\\webcontent\\") + 16));
 					} else {
-						operFile.setTargetPath(Config.CLASS_TARGET_PATH + path.substring(path.indexOf("\\src\\") + 5));
-						operFile.setTargetPath(Config.BIZ_TARGET_PATH + path.substring(path.indexOf("\\src\\") + 5));
+						operFile.setTargetPath(Config.CLASS_TARGET_PATH + path.substring(path.indexOf("\\src\\") + 5) + ";" + Config.BIZ_TARGET_PATH + path.substring(path.indexOf("\\src\\") + 5));
 					}
 					operFileList.add(operFile);
 				}
@@ -45,7 +44,7 @@ public class OperFileService {
 					operFile.setTargetPath(Config.CLASS_TARGET_PATH + classPath);
 
 					operFileList.add(operFile);
-				} else if (path.endsWith(".bizx")) {
+				} else if (path.endsWith(".bizx") || path.endsWith(".compositex")) {
 					OperFile operFile = new OperFile();
 					operFile.setOper("D".equals(svnRow.getType()) ? Oper.DELETE : Oper.COPY);
 
