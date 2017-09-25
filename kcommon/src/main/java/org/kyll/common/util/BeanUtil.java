@@ -63,13 +63,12 @@ public class BeanUtil {
 		T t = null;
 		if (clazz != null) {
 			try {
-				t = clazz.newInstance();
-			} catch (InstantiationException e) {
+				t = clazz.getDeclaredConstructor().newInstance();
+			} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | InstantiationException e) {
 				throw new RuntimeException(new SystemException(String.format(Const.EC_MSG_INSTANTIATION, clazz), e));
-			} catch (IllegalAccessException e) {
-				throw new RuntimeException(new SystemException(String.format(Const.EC_MSG_ILLEGALACCESS_CLASS, clazz), e));
 			}
 		}
+
 		return t;
 	}
 
@@ -90,7 +89,7 @@ public class BeanUtil {
 	}
 
 	public static Object invoke(Object object, Method method, Object... args) {
-		Object result = null;
+		Object result;
 		try {
 			result = method.invoke(object, args);
 		} catch (IllegalAccessException e) {
@@ -126,5 +125,5 @@ public class BeanUtil {
 		return types == null ? null : (Class) types[0];
 	}
 
-	private static final Map<String, BeanCopier> BEAN_COPIER_MAP = new HashMap<String, BeanCopier>();
+	private static final Map<String, BeanCopier> BEAN_COPIER_MAP = new HashMap<>();
 }
