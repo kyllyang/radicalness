@@ -2,6 +2,7 @@ package org.kyll.tax.compiler.facade;
 
 import lombok.extern.slf4j.Slf4j;
 import org.kyll.tax.compiler.service.CommandService;
+import org.kyll.tax.compiler.service.DeployService;
 import org.kyll.tax.compiler.service.JarService;
 import org.kyll.tax.compiler.service.OperFileService;
 import org.kyll.tax.compiler.service.SvnRowService;
@@ -23,11 +24,14 @@ public class CompilerFacade {
 	private CommandService commandService;
 	@Autowired
 	private JarService jarService;
+	@Autowired
+	private DeployService deployService;
 
 	public void execute() {
 		commandService.execute(operFileService.convert(svnRowService.readSvnRowList()));
 
-		jarService.jarWar();
-		jarService.jarEar();
+	//	jarService.jarWar();
+	//	jarService.jarEar();
+		deployService.execute();
 	}
 }
