@@ -10,7 +10,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * User: Kyll
@@ -19,19 +21,57 @@ import java.util.List;
 @Slf4j
 @Component
 public class SvnRowService {
-	public List<SvnRow> readSvnRowList() {
-		Config.CMD_SVN_STATUS[2] = Config.PROJECT_PATH;
+	public List<SvnRow> readSvnStatusList() {
+		List<SvnRow> svnRowList = new ArrayList<>();
+		for (String row : executeSvnCmd(Config.CMD_SVN_STATUS)) {
+			SvnRow svnRow = new SvnRow();
+			svnRow.setType(StringUtil.getFirstChar(row.trim()));
+			svnRow.setPath(row.substring(8));
+			svnRowList.add(svnRow);
+		}
 
+		return svnRowList;
+	}
+
+	public List<SvnRow> readSvnLogList(String... versions) {
+		Set<String> rowSet = new LinkedHashSet<>();
+		for (String version : versions) {
+			Config.CMD_SVN_LOG[4] = version;
+
+			List<String> rowList = executeSvnCmd(Config.CMD_SVN_LOG);
+			for (int i = 3, size = rowList.size(); i < size; i++) {
+				String row = rowList.get(i);
+				if (StringUtil.isNotBlank(row)) {
+					rowSet.add(row);
+				} else {
+					break;
+				}
+			}
+		}
+
+		List<SvnRow> svnRowList = new ArrayList<>();
+		for (String row : rowSet) {
+			SvnRow svnRow = new SvnRow();
+			svnRow.setType(StringUtil.getFirstChar(row.trim()));
+			svnRow.setPath(row.substring(22));
+			svnRowList.add(svnRow);
+		}
+
+		return svnRowList;
+	}
+
+
+	private List<String> executeSvnCmd(String[] cmds) {
 		List<String> rowList = new ArrayList<>();
 		Process process = null;
 		try {
-			process = Runtime.getRuntime().exec(Config.CMD_SVN_STATUS);
+			process = Runtime.getRuntime().exec(cmds);
 		} catch (IOException e) {
 			log.error("SVN 命令执行异常", e);
 			System.exit(1);
 		}
 
-		try (BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+		try (BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream(), "GBK"))) {
 			String line;
 			while ((line = in.readLine()) != null) {
 				log.info(line);
@@ -42,14 +82,6 @@ public class SvnRowService {
 			System.exit(1);
 		}
 
-		List<SvnRow> svnRowList = new ArrayList<>();
-		for (String row : rowList) {
-			SvnRow svnRow = new SvnRow();
-			svnRow.setType(StringUtil.getFirstChar(row.trim()));
-			svnRow.setPath(row.substring(8));
-			svnRowList.add(svnRow);
-		}
-
 		try {
 			if (0 == process.waitFor()) {
 				log.info("SVN 命令执行成功");
@@ -58,8 +90,9 @@ public class SvnRowService {
 			}
 		} catch (InterruptedException e) {
 			log.error("SVN 命令执行异常", e);
+			System.exit(1);
 		}
 
-		return svnRowList;
+		return rowList;
 	}
 }

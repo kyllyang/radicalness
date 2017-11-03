@@ -28,10 +28,11 @@ public class CompilerFacade {
 	private DeployService deployService;
 
 	public void execute() {
-		commandService.execute(operFileService.convert(svnRowService.readSvnRowList()));
+	//	commandService.execute(operFileService.convert(svnRowService.readSvnStatusList()));
+		commandService.execute(operFileService.convert(svnRowService.readSvnLogList("45104")));
 
-	//	jarService.jarWar();
-	//	jarService.jarEar();
-		deployService.execute();
+		jarService.jarWar();
+		jarService.jarEar();
+	//	deployService.execute();
 	}
 }
