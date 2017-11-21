@@ -1,0 +1,8 @@
+server:
+  port: 8002
+spring:
+  application:
+    name: config
+  cloud:
+    config:
+      uri: http://127.0.0.1:8001
