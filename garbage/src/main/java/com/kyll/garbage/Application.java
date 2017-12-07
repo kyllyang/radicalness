@@ -1,6 +1,6 @@
-package org.kyll.tax.cccc;
+package com.kyll.garbage;
 
-import org.kyll.tax.cccc.facade.CcccFacade;
+import com.kyll.garbage.facade.GarbageFacade;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -13,6 +13,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 public class Application {
 	public static void main(String[] args) {
 		ConfigurableApplicationContext context = SpringApplication.run(Application.class, args);
-		context.getBean(CcccFacade.class).execute4();
+		context.getBean(GarbageFacade.class).execute();
 	}
 }

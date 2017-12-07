@@ -30,7 +30,7 @@ public class OperFileService {
 					if (path.contains("\\src\\webcontent\\") || path.contains("/src/webcontent/")) {
 						operFile.setTargetPath(Config.WEB_TARGET_PATH + path.substring(indexOf(path, "\\src\\webcontent\\") + 16));
 					} else {
-						operFile.setTargetPath(Config.CLASS_TARGET_PATH + path.substring(indexOf(path, "\\src\\") + 5) + ";" + Config.BIZ_TARGET_PATH + path.substring(path.indexOf("\\src\\") + 5));
+						operFile.setTargetPath(Config.CLASS_TARGET_PATH + path.substring(indexOf(path, "\\src\\") + 5) + ";" + Config.BIZ_TARGET_PATH + path.substring(indexOf(path, "\\src\\") + 5));
 					}
 					operFileList.add(operFile);
 				}
