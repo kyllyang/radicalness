@@ -5,6 +5,23 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.openxml4j.opc.OPCPackage;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Node;
+import org.dom4j.io.OutputFormat;
+import org.dom4j.io.XMLWriter;
+import org.kyll.common.util.DateUtil;
 import org.kyll.common.util.StringUtil;
 import org.kyll.tax.cccc.domain.DataMsgYq;
 import org.kyll.tax.cccc.service.DataMsgYqService;
@@ -12,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
+import java.io.CharArrayWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -68,29 +86,10 @@ public class CcccFacade {
 		}
 	}
 
-	/**
-	 * FOR 张朋玉 青岛预约保单入库
-	 */
-	public void execute2() {
-		for (int i = 0, length = DATAS.length; i < length; i++) {
-			String[] data = DATAS[i];
-
-			Map<String, String> map = new HashMap<>();
-			map.put("aa", MSG.replace("${tran_seqno}", data[0]).replace("${amt}", data[1]));
-
-			String json = toJson(map);
-			System.out.println(i + ": " + json);
-
-			long curr = System.currentTimeMillis();
-			System.out.println(post(json));
-			System.out.println("耗费 " + (System.currentTimeMillis() - curr) + " 毫秒");
-		}
-	}
-
 	public void execute3() {
 		StringBuilder txt = new StringBuilder();
 
-		try (BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(new File("C:\\Users\\Administrator\\Downloads\\data20.txt"))))) {
+		try (BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(new File("F:\\downloads\\报文.txt"))))) {
 			String line;
 			while ((line = in.readLine()) != null) {
 				txt.append(line);
@@ -103,34 +102,9 @@ public class CcccFacade {
 		StringTokenizer st = new StringTokenizer(txt.toString(), "|||");
 		while (st.hasMoreTokens()) {
 			String msg = st.nextToken().replace("\"\"", "\"");
-			msg = msg.replace("<acc>1008355235</acc>", "<acc>1008535053</acc>");
-			msg = msg.replace("<tran_code>1</tran_code>", "<tran_code>EX_1</tran_code>");
-			msg = msg.replace("<cstm_no>1008355235</cstm_no>", "<cstm_no>1008535053</cstm_no>");
-			msg = msg.replace("<attribute3></attribute3>", "<attribute3>1</attribute3>");
-			String msg0 = msg.substring(0, msg.indexOf("<acc_flag>"));
-			msg0 += "<acc_flag>2</acc_flag>\n" +
-					"<per_acc></per_acc>\n" +
-					"<per_acc_name></per_acc_name>\n" +
-					"<per_cstm_id></per_cstm_id>\n" +
-					"<per_open_inst></per_open_inst>\n" +
-					"<per_paper_type></per_paper_type>\n" +
-					"<per_paper_no></per_paper_no>\n" +
-					"<com_acc>1008535053</com_acc>\n" +
-					"<com_acc_name>1008535053</com_acc_name>\n" +
-					"<com_cstm_id>1008535053</com_cstm_id>\n" +
-					"<com_open_inst>37150000</com_open_inst>\n" +
-					"<com_permit_no>11371525MB28284265</com_permit_no>\n" +
-					"<com_org_inst_code></com_org_inst_code>\n" +
-					"<com_acc_addr></com_acc_addr>\n" +
-					"<com_acc_phone></com_acc_phone>\n" +
-					"<com_taxpayer_id></com_taxpayer_id>\n" +
-					"<com_taxpayer_name>冠县综合行政执法局</com_taxpayer_name>\n" +
-					"<com_login_type>2</com_login_type>\n" +
-					"<com_open_acc_bank></com_open_acc_bank>\n" +
-					"<com_open_acc>1008535053</com_open_acc>";
-			msg0 += msg.substring(msg.indexOf("<attribute1>"));
-		//	System.out.println(msg0);
-			msgList.add(msg0);
+			msg = msg.replace("<dtl_seqno>1</dtl_seqno>", "<dtl_seqno>2</dtl_seqno>");
+		//	System.out.println(msg);
+			msgList.add(msg);
 		}
 
 		for (int i = 0, size = msgList.size(); i < size; i++) {
@@ -227,8 +201,11 @@ public class CcccFacade {
 		}
 	}
 
+	/**
+	 * 查询 FAFGF 定时任务数据重复项
+	 */
 	public void execute6() {
-		for (File file : new File("C:\\Users\\Administrator\\work\\temp\\tax_etl").listFiles()) {
+		for (File file : new File("F:\\downloads\\tax_etl").listFiles()) {
 			Set<String> set = new HashSet<>();
 			try (BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(file)))) {
 				int count = 1;
@@ -252,7 +229,226 @@ public class CcccFacade {
 		}
 	}
 
-	private static String post(String content) {
+	/**
+	 * FOR 张朋玉 预约保单入库 word
+	 */
+	public void execute8() {
+		List<String[]> list = new ArrayList<>();
+		for (File file : new File("F:\\downloads\\tax_pyab_word").listFiles()) {
+			XWPFDocument document;
+			try {
+				document = new XWPFDocument(new FileInputStream(file));
+			} catch (IOException e) {
+				System.out.println("读取 word 数据文件失败");
+				e.printStackTrace();
+				return;
+			}
+
+			for (XWPFTable table : document.getTables()) {
+				String taxpayer = null;
+				int beginIndex = -1;
+				int endIndex = -1;
+				List<XWPFTableRow> rowList = table.getRows();
+				for (int i = 0, size = rowList.size(); i < size; i++) {
+					XWPFTableRow row = rowList.get(i);
+					if (row.getCell(0).getText().trim().contains("纳税人识别号")) {
+						taxpayer = row.getCell(1).getText().trim();
+					} else if (row.getCell(0).getText().trim().contains("序号")) {
+						beginIndex = i;
+					} else if (row.getCell(0).getText().trim().contains("合计")) {
+						endIndex = i;
+					}
+				}
+
+				String totalPno = null;
+				String totalAmt = null;
+				for (int i = beginIndex + 1; i < endIndex; i++) {
+					XWPFTableRow row = rowList.get(i);
+
+					String pno = row.getCell(1).getText().trim();
+					String amt = row.getCell(2).getText().trim();
+
+					if (StringUtil.isNotBlank(pno) && StringUtil.isNotBlank(amt) && !"0".equals(pno) && !"0".equals(amt)) {
+						if (StringUtil.isBlank(totalPno)) {
+							totalPno = pno;
+						}
+
+						totalAmt = new BigDecimal(amt).add(StringUtil.isBlank(totalAmt) ? BigDecimal.ZERO : new BigDecimal(totalAmt)).toString();
+					}
+				}
+
+				if (StringUtil.isNotBlank(totalPno) && StringUtil.isNotBlank(totalAmt)) {
+					list.add(new String[]{taxpayer, totalPno, totalAmt});
+				}
+			}
+		}
+
+		/*for (String[] datas : list) {
+			System.out.println("instr(t.tran_seqno, '" + datas[1] + "') > 0 or");
+		}*/
+
+
+		String tranDate = DateUtil.formatDateCompact(DateUtil.now());
+		String tranTime = DateUtil.formatDatetimeCompact(DateUtil.now());
+		for (String[] datas : list) {
+			String msg = getMsg(datas[0]);
+
+			if (StringUtil.isBlank(msg)) {
+				System.out.println("客户[" + datas[0] + "]不存在");
+			} else {
+				Map<String, String> map = new HashMap<>();
+				map.put("tran_date", tranDate);
+				map.put("tran_seqno", datas[1]);
+				map.put("dtl_seqno", "2");
+				map.put("amt", datas[2]);
+				map.put("tran_code", "EX_1");
+				map.put("summ", "");
+				map.put("tran_time", tranTime);
+				map.put("attribute1", datas[1]);
+				map.put("attribute2", "");
+				map.put("attribute3", "1");
+
+				send(replaceInfo(msg, map));
+			}
+		}
+	}
+
+	/**
+	 * FOR 张朋玉 预约保单入库 excel
+	 */
+	public void execute9() {
+		String tranDate = DateUtil.formatDateCompact(DateUtil.now());
+		String tranTime = DateUtil.formatDatetimeCompact(DateUtil.removeHMS(DateUtil.now()));
+
+		for (File file : new File("F:\\downloads\\tax_pyab_excel").listFiles()) {
+			System.out.println(file);
+
+			XSSFWorkbook workbook;
+			try {
+				workbook = new XSSFWorkbook(OPCPackage.open(file));
+			} catch (IOException | InvalidFormatException e) {
+				System.out.println("读取 excel 报文文件失败");
+				e.printStackTrace();
+				return;
+			}
+
+			XSSFSheet sheet = workbook.getSheetAt(workbook.getActiveSheetIndex());
+
+			String msg = getMsg(getCellValue(sheet.getRow(3).getCell(2)));
+
+			for (int i = 9, lastRowNum = sheet.getLastRowNum(); i < lastRowNum; i++) {
+				XSSFRow row = sheet.getRow(i);
+
+				if (StringUtil.isBlank(getCellValue(row.getCell(1)))) {
+					break;
+				}
+
+				String pno = getCellValue(row.getCell(2));
+				String amt = getCellValue(row.getCell(3));
+
+				Map<String, String> map = new HashMap<>();
+				map.put("tran_date", tranDate);
+				map.put("tran_seqno", pno);
+				map.put("dtl_seqno", "2");
+				map.put("amt", amt);
+				map.put("tran_code", "EX_1");
+				map.put("summ", "");
+				map.put("tran_time", tranTime);
+				map.put("attribute1", pno);
+				map.put("attribute2", "");
+				map.put("attribute3", "1");
+
+			//	System.out.println("instr(t.tran_seqno, '" + pno + "') > 0 or");
+				send(replaceInfo(msg, map));
+			}
+		}
+	}
+
+	private String getCellValue(XSSFCell cell) {
+		String result;
+		CellType cellType = cell.getCellTypeEnum();
+		if (CellType.NUMERIC == cellType) {
+			result = new BigDecimal(String.valueOf(cell.getNumericCellValue())).toString();
+		} else if (CellType.STRING == cellType) {
+			result = cell.getStringCellValue().trim();
+		} else if (CellType.FORMULA == cellType) {
+			result = cell.getRichStringCellValue().getString().trim();
+		} else {
+			result = null;
+		}
+		return result;
+	}
+
+	private String replaceInfo(String msg, Map<String, String> map) {
+		Document document;
+		try {
+			document = DocumentHelper.parseText(msg);
+		} catch (DocumentException e) {
+			System.out.println("解析报文失败");
+			e.printStackTrace();
+			return null;
+		}
+
+		Node customerAndPolicyPlanDtoNode = document.selectSingleNode("/PACKET/BODY/CustomerAndPolicyPlanDto");
+		for (Map.Entry<String, String> entry : map.entrySet()) {
+			customerAndPolicyPlanDtoNode.selectSingleNode(entry.getKey()).setText(entry.getValue());
+		}
+
+		OutputFormat format = new OutputFormat();
+		format.setExpandEmptyElements(true);
+
+		CharArrayWriter caw = new CharArrayWriter();
+		XMLWriter xmlWriter = new XMLWriter(caw, format);
+		try {
+			xmlWriter.write(document);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				xmlWriter.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return caw.toString();
+	}
+
+	private String getMsg(String taxpayer) {
+		XSSFWorkbook workbook;
+		try {
+			workbook = new XSSFWorkbook(OPCPackage.open(new File("F:\\downloads\\tax_common\\t_tax_data_msg_yq.xlsx")));
+		} catch (IOException | InvalidFormatException e) {
+			System.out.println("读取 excel 报文文件失败");
+			e.printStackTrace();
+			return null;
+		}
+
+		String msg = null;
+		XSSFSheet sheet = workbook.getSheetAt(workbook.getActiveSheetIndex());
+		for (int i = 1, lastRowNum = sheet.getLastRowNum(); i < lastRowNum; i++) {
+			XSSFRow row = sheet.getRow(i);
+			if (taxpayer.equals(getCellValue(row.getCell(2)).substring(1))) {
+				msg = getCellValue(row.getCell(3));
+				break;
+			}
+		}
+
+		return msg;
+	}
+
+	private void send(String msg) {
+		Map<String, String> map = new HashMap<>();
+		map.put("aa", msg);
+
+		String json = toJson(map);
+
+		long curr = System.currentTimeMillis();
+		System.out.println(post(json));
+		System.out.println("耗费 " + (System.currentTimeMillis() - curr) + " 毫秒");
+	}
+
+	private String post(String content) {
 		StringBuilder result = new StringBuilder();
 
 		try {
@@ -265,7 +461,7 @@ public class CcccFacade {
 			connection.setRequestProperty("Cache-Control", "no-cache");
 			connection.setRequestProperty("Connection", "Keep-Alive");
 			connection.setRequestProperty("Content-Length", "11");
-			connection.setRequestProperty("Cookie", "JSESSIONID=lzyjh52YZGtqDkBTyZmtQk0PCpMJTmNgMyfknHy5Cm21wL3KmNgb!935586178");
+			connection.setRequestProperty("Cookie", "JSESSIONID=sy0ThvcLBvCJn1v8d7344JFTSjJ3VtR5LVGP2C1vzLFsySNp6tfQ!1527925976");
 			connection.setRequestProperty("DNT", "1");
 			connection.setRequestProperty("Host", "10.9.237.153:7001");
 			connection.setRequestProperty("Referer", "http://10.9.237.153:7001/default/tax/aatest/cccc.jsp");
