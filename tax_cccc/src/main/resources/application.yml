@@ -3,14 +3,14 @@ spring:
 ---
 spring:
   profiles: development
-#  datasource:
-#    url: jdbc:oracle:thin:@10.9.237.228:1521/fafprod
-#    username: ygz
-#    password: ygz
-#    driver-class-name: oracle.jdbc.OracleDriver
-#  jpa:
-#    database: oracle
-#    show-sql: true
+  datasource:
+    url: jdbc:oracle:thin:@10.9.237.228:1521/fafprod
+    username: ygz
+    password: ygz
+    driver-class-name: oracle.jdbc.OracleDriver
+  jpa:
+    database: oracle
+    show-sql: false
 ---
 spring:
   profiles: production

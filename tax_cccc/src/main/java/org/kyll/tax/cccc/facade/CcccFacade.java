@@ -8,7 +8,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -23,8 +29,9 @@ import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
 import org.kyll.common.util.DateUtil;
 import org.kyll.common.util.StringUtil;
-import org.kyll.tax.cccc.domain.DataMsgYq;
+import org.kyll.tax.cccc.domain.PrintBillMsg;
 import org.kyll.tax.cccc.service.DataMsgYqService;
+import org.kyll.tax.cccc.service.PrintBillMsgService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -32,6 +39,7 @@ import java.io.BufferedReader;
 import java.io.CharArrayWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -40,6 +48,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -59,9 +68,11 @@ import java.util.stream.Stream;
 public class CcccFacade {
 	@Autowired
 	private DataMsgYqService dataMsgYqService;
+	@Autowired
+	private PrintBillMsgService printBillMsgService;
 
 	public void execute1() {
-		List<DataMsgYq> dataMsgYqList = dataMsgYqService.findList();
+		/*List<DataMsgYq> dataMsgYqList = dataMsgYqService.findList();
 		for (int i = 0, size = dataMsgYqList.size(); i < size; i++) {
 			DataMsgYq dataMsgYq = dataMsgYqList.get(i);
 
@@ -83,7 +94,7 @@ public class CcccFacade {
 					}
 				}
 			}
-		}
+		}*/
 	}
 
 	public void execute3() {
@@ -234,7 +245,7 @@ public class CcccFacade {
 	 */
 	public void execute8() {
 		List<String[]> list = new ArrayList<>();
-		for (File file : new File("F:\\downloads\\tax_pyab_word").listFiles()) {
+		for (File file : new File("C:\\Users\\Administrator\\Documents\\work\\temp\\tax_pyab_word").listFiles((dir, name) -> name.endsWith("docx"))) {
 			XWPFDocument document;
 			try {
 				document = new XWPFDocument(new FileInputStream(file));
@@ -260,7 +271,7 @@ public class CcccFacade {
 					}
 				}
 
-				String totalPno = null;
+				/*String totalPno = null;
 				String totalAmt = null;
 				for (int i = beginIndex + 1; i < endIndex; i++) {
 					XWPFTableRow row = rowList.get(i);
@@ -279,14 +290,31 @@ public class CcccFacade {
 
 				if (StringUtil.isNotBlank(totalPno) && StringUtil.isNotBlank(totalAmt)) {
 					list.add(new String[]{taxpayer, totalPno, totalAmt});
+				}*/
+
+				for (int i = beginIndex + 1; i < endIndex; i++) {
+					XWPFTableRow row = rowList.get(i);
+
+					String pno = row.getCell(1).getText().trim();
+					String amt = row.getCell(2).getText().trim();
+
+					if (StringUtil.isNotBlank(pno) && StringUtil.isNotBlank(amt) && !"0".equals(pno) && !"0".equals(amt)) {
+						if (endIndex - beginIndex > 1) {
+							list.add(new String[]{taxpayer, pno, amt});
+						}
+					}
 				}
 			}
 		}
 
 		/*for (String[] datas : list) {
 			System.out.println("instr(t.tran_seqno, '" + datas[1] + "') > 0 or");
+		//	System.out.println(datas[1]);
 		}*/
 
+		/*if (true) {
+			return;
+		}*/
 
 		String tranDate = DateUtil.formatDateCompact(DateUtil.now());
 		String tranTime = DateUtil.formatDatetimeCompact(DateUtil.now());
@@ -308,7 +336,9 @@ public class CcccFacade {
 				map.put("attribute2", "");
 				map.put("attribute3", "1");
 
-				send(replaceInfo(msg, map));
+				msg = replaceInfo(msg, map);
+				System.out.println(msg);
+			//	send(msg);
 			}
 		}
 	}
@@ -320,7 +350,7 @@ public class CcccFacade {
 		String tranDate = DateUtil.formatDateCompact(DateUtil.now());
 		String tranTime = DateUtil.formatDatetimeCompact(DateUtil.removeHMS(DateUtil.now()));
 
-		for (File file : new File("F:\\downloads\\tax_pyab_excel").listFiles()) {
+		for (File file : new File("C:\\Users\\Administrator\\Documents\\work\\temp\\tax_pyab_excel").listFiles()) {
 			System.out.println(file);
 
 			XSSFWorkbook workbook;
@@ -359,7 +389,147 @@ public class CcccFacade {
 				map.put("attribute3", "1");
 
 			//	System.out.println("instr(t.tran_seqno, '" + pno + "') > 0 or");
-				send(replaceInfo(msg, map));
+				System.out.println(pno);
+			//	send(replaceInfo(msg, map));
+			}
+		}
+	}
+
+	public void execute10() {
+		Set<String> pSet = new HashSet<>();
+		Collections.addAll(pSet, P_AS);
+
+		for (String p : QP_AS) {
+			if (!pSet.add(p)) {
+				System.out.println(p);
+			}
+		}
+	}
+
+	public void execute11() {
+		Map<String, String> accTypeMap = new HashMap<>();
+		accTypeMap.put("1", "对私");
+		accTypeMap.put("2", "对公");
+		Map<String, String> billTypeMap = new HashMap<>();
+		billTypeMap.put("1", "普通");
+		billTypeMap.put("2", "专用");
+		Map<String, String> openModeMap = new HashMap<>();
+		openModeMap.put("1", "正常");
+		openModeMap.put("4", "合并");
+		openModeMap.put("5", "拆分");
+		openModeMap.put("6", "红字");
+		openModeMap.put("7", "合并拆分");
+		openModeMap.put("8", "作废");
+
+		String sql =
+				"  from t_tax_print_bill_msg t\n" +
+				" where t.open_date < '20180101'\n" +
+				"   and t.bill_cert_no <> '0'\n" +
+				"   and t.bill_no <> '0'\n" +
+				"   and t.open_mode in ('1', '4', '5', '6', '7', '8')\n" +
+				"   and exists (select '1'\n" +
+				"          from t_tax_open_inst t0\n" +
+				"         where t0.acc_inst not in ('FAF000000', 'FAF000001')\n" +
+				"           and t0.open_point = t.open_point)\n";
+		String countSql = "select count(1) count " + sql;
+
+		List countList = dataMsgYqService.query(countSql);
+		int totalRow = ((BigDecimal) countList.get(0)).intValue();
+
+		List<String[]> dataList = new ArrayList<>();
+		int pageSize = 1000;
+		for (int i = 0, pageCount = totalRow / pageSize + 1; i < pageCount; i++) {
+			int start = i * pageSize + 1;
+			int end = (i + 1) * pageSize;
+			System.out.println("获取数据[" + start + ", " + end + "]");
+
+			/*if (i == 7) {
+				break;
+			}*/
+
+			for (PrintBillMsg printBillMsg : printBillMsgService.findList(start, end)) {
+				List<String> openIdxList = new ArrayList<>();
+				for (String openIdx : printBillMsg.getOpenIdx().split("\\|")) {
+					if (StringUtil.isNotBlank(openIdx)) {
+						openIdxList.add(openIdx);
+					}
+				}
+
+				List<Object[]> paList = dataMsgYqService.query("select t.tran_seqno, t.cstm_id, t.acc_type, a.acc_name, a.acc_no\n" +
+						"  from t_tax_open_bill_msg t\n" +
+						"  join (select t.acc_name, t.paper_no acc_no, t.cstm_id, '1' acc_type\n" +
+						"          from t_tax_per_acc_msg t\n" +
+						"        union all\n" +
+						"        select t.acc_name, decode(t.permit_no, null, t.taxpayer_id, t.permit_no) acc_no, t.cstm_id, '2' acc_type\n" +
+						"          from t_tax_com_acc_msg t) a\n" +
+						"    on t.cstm_id = a.cstm_id\n" +
+						" where " + toSqlIn("t.open_idx", openIdxList) + "\n" +
+						" order by t.tran_seqno asc");
+
+				for (Object[] paDatas : paList) {
+					String p = StringUtil.toEmptyIf(paDatas[0]).trim();
+					p = p.substring(p.indexOf("_") + 1);
+					int markIndex = p.lastIndexOf("_");
+					if (markIndex > -1) {
+						if (!p.substring(markIndex + 1).startsWith("0")) {
+							p = p.substring(0, markIndex);
+						}
+					}
+
+					dataList.add(new String[]{p, StringUtil.toEmptyIf(paDatas[3]).trim(), StringUtil.toEmptyIf(paDatas[4]).trim(), accTypeMap.get(StringUtil.toEmptyIf(paDatas[2]).trim()),
+							StringUtil.toEmptyIf(printBillMsg.getOpenDate()).trim(), StringUtil.toEmptyIf(printBillMsg.getTotal().toString()).trim(), StringUtil.toEmptyIf(printBillMsg.getBillCertNo()).trim(), StringUtil.toEmptyIf(printBillMsg.getBillNo()).trim(),
+							billTypeMap.get(StringUtil.toEmptyIf(printBillMsg.getBillType()).trim()), openModeMap.get(StringUtil.toEmptyIf(printBillMsg.getOpenMode()).trim()),
+							StringUtil.toEmptyIf(printBillMsg.getInName()).trim(), StringUtil.toEmptyIf(printBillMsg.getInTaxpayer()).trim(), StringUtil.toEmptyIf(printBillMsg.getInAddrPhone()).trim(), StringUtil.toEmptyIf(printBillMsg.getInBankAcc()).trim()});
+				}
+			}
+		}
+
+		String[] headerNames = {"保单号", "客户名称", "客户证件号", "客户类型", "开票日期", "发票金额", "发票代码", "发票号码", "发票类型", "开票方式", "购货单位名称", "购货单位纳税人识别号", "购货单位地址及电话", "购货单位开户行及账号"};
+
+		int excelSize = 5000;
+		for (int i = 0, excelCount = dataList.size() / excelSize + 1; i < excelCount; i++) {
+			int start = i * excelSize;
+			int end = (i + 1) * excelSize;
+
+			XSSFWorkbook workbook = new XSSFWorkbook();
+
+			XSSFFont font = workbook.createFont();
+			font.setBold(true);
+
+			XSSFCellStyle headerCellSyle = workbook.createCellStyle();
+			headerCellSyle.setAlignment(HorizontalAlignment.CENTER);
+			headerCellSyle.setFillForegroundColor(IndexedColors.CORNFLOWER_BLUE.getIndex());
+			headerCellSyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+			headerCellSyle.setFont(font);
+
+			XSSFSheet sheet = workbook.createSheet();
+			sheet.setDefaultColumnWidth(20);
+
+			XSSFRow headerRow = sheet.createRow(sheet.getPhysicalNumberOfRows());
+			for (int j = 0, length = headerNames.length; j < length; j++) {
+				XSSFCell cell = headerRow.createCell(j);
+				cell.setCellStyle(headerCellSyle);
+				cell.setCellValue(new XSSFRichTextString(headerNames[j]));
+			}
+
+			for (int j = start; j < end; j++) {
+				if (j < dataList.size()) {
+					String[] datas = dataList.get(j);
+
+					XSSFRow row = sheet.createRow(sheet.getPhysicalNumberOfRows());
+					for (int k = 0, length = datas.length; k < length; k++) {
+						row.createCell(k).setCellValue(new XSSFRichTextString(datas[k]));
+					}
+				}
+			}
+
+			File file = new File("C:\\Users\\Administrator\\Downloads\\" + (i + 1) + ".xlsx");
+			System.out.println(file);
+
+			try {
+				workbook.write(new FileOutputStream(file));
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 	}
@@ -417,7 +587,7 @@ public class CcccFacade {
 	private String getMsg(String taxpayer) {
 		XSSFWorkbook workbook;
 		try {
-			workbook = new XSSFWorkbook(OPCPackage.open(new File("F:\\downloads\\tax_common\\t_tax_data_msg_yq.xlsx")));
+			workbook = new XSSFWorkbook(OPCPackage.open(new File("C:\\Users\\Administrator\\Documents\\work\\temp\\tax_common\\t_tax_data_msg_yq.xlsx")));
 		} catch (IOException | InvalidFormatException e) {
 			System.out.println("读取 excel 报文文件失败");
 			e.printStackTrace();
@@ -497,6 +667,14 @@ public class CcccFacade {
 		}
 
 		return json;
+	}
+
+	private String toSqlIn(String colunmName, List<String> list) {
+		List<String> inList = new ArrayList<>();
+		for (int i = 0, size = list.size(); i < size; i += 1000) {
+			inList.add(colunmName + " in ('" + StringUtil.join(list.subList(i, size > 1000 + i ? 1000 + i : size), "', '") + "')");
+		}
+		return inList.size() == 1 ? inList.get(0) : "(" + StringUtil.join(inList, " or ") + ")";
 	}
 
 	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
@@ -743,4 +921,206 @@ public class CcccFacade {
 			"<attribute4></attribute4>\n" +
 			"<attribute5></attribute5>\n" +
 			"</CustomerAndPolicyPlanDto></BODY></PACKET>\n";
+	private static final String[] P_AS = {
+			"PYAB09901002018000054",
+			"PYAB09901002018000055",
+			"PYAB09901002018000021",
+			"PYAB09901002018000057",
+			"PYAB09901002018000002",
+			"PYAB09901002018000046",
+			"PYAB09901002018000047",
+			"PYAB09901002018000004",
+			"PYAB09901002018000051",
+			"PYAB09901002018000003",
+			"PYAB09901002018000052",
+			"PYAB09901002018000036",
+			"PYAB09901002018000037",
+			"PYAB09901002018000042",
+			"PYAB09901002018000038",
+			"PYAB09901002018000043",
+			"PYAB09901002018000044",
+			"PYAB09901002018000028",
+			"PYAB09901002018000029",
+			"PYAB09901002018000031",
+			"PYAB09901002018000032",
+			"PYAB09901002018000019",
+			"PYAB09901002018000015",
+			"PYAB09901002018000023",
+			"PYAB09901002018000016",
+			"PYAB09901002018000153",
+			"PYAB09901002018000024",
+			"PYAB09901002018000025",
+			"PYAB09901002018000010",
+			"PYAB09901002018000011",
+			"PYAB09901002018000160",
+			"PYAB09901002018000159",
+			"PYAB09901002018000100",
+			"PYAB09901002018000151",
+			"PYAB09901002018000157",
+			"PYAB09901002018000154",
+			"PYAB09901002018000155",
+			"PYAB09901002018000097",
+			"PYAB09901002018000089",
+			"PYAB09901002018000107",
+			"PYAB09901002018000137",
+			"PYAB09901002018000135",
+			"PYAB09901002018000162",
+			"PYAB09901002018000132",
+			"PYAB09901002018000072",
+			"PYAB09901002018000148",
+			"PYAB09901002018000085",
+			"PYAB09901002018000127",
+			"PYAB09901002018000103",
+			"PYAB09901002018000142",
+			"PYAB09901002018000139",
+			"PYAB09901002018000079",
+			"PYAB09901002018000077",
+			"PYAB09901002018000083",
+			"PYAB09901002018000007",
+			"PYAB09901002018000008",
+			"PYAB09901002018000117",
+			"PYAB09901002018000121",
+			"PYAB09901002018000115",
+			"PYAB09901002018000118",
+			"PYAB09901002018000126",
+			"PYAB09901002018000071",
+			"PYAB09901002018000064",
+			"PYAB09901002018000087",
+			"PYAB09901002018000104",
+			"PYAB09901002018000145",
+			"PYAB09901002018000080",
+			"PYAB09901002018000102",
+			"PYAB09901002018000140",
+			"PYAB09901002018000006",
+			"PYAB09901002018000119",
+			"PYAB09901002018000105",
+			"PYAB09901002018000070",
+			"PYAB09901002018000066",
+			"PYAB09901002018000009",
+			"PYAB09901002018000123",
+			"PYAB09901002018000122",
+			"PYAB09901002018000116",
+			"PYAB09901002018000125",
+			"PYAB09901002018000134",
+			"PYAB09901002018000096",
+			"PYAB09901002018000065",
+			"PYAB09901002018000063",
+			"PYAB09901002018000092",
+			"PYAB09901002018000091",
+			"PYAB09901002018000088",
+			"PYAB09901002018000138",
+			"PYAB09901002018000136",
+			"PYAB09901002018000133",
+			"PYAB09901002018000074",
+			"PYAB09901002018000073",
+			"PYAB09901002018000113",
+			"PYAB09901002018000081",
+			"PYAB09901002018000144",
+			"PYAB09901002018000112",
+			"PYAB09901002018000101",
+			"PYAB09901002018000161",
+			"PYAB09901002018000078",
+			"PYAB09901002018000076",
+			"PYAB09901002018000005",
+			"PYAB09901002018000082",
+			"PYAB09901002018000131",
+			"PYAB09901002018000130",
+			"PYAB09901002018000061",
+			"PYAB09901002018000146",
+			"PYAB09901002018000150",
+			"PYAB09901002018000147",
+			"PYAB09901002018000120",
+			"PYAB09901002018000141",
+			"PYAB09901002018000143",
+			"PYAB09901002018000110",
+			"PYAB09901002018000106",
+			"PYAB09901002018000108",
+			"PYAB09901002018000093",
+			"PYAB09901002018000094",
+			"PYAB09901002018000069",
+			"PYAB09901002018000068",
+			"PYAB09901002018000124",
+			"PYAB09901002018000114",
+			"PYAB09901002018000095",
+			"PYAB09901002018000067",
+			"PYAB09901002018000090",
+			"PYAB09901002018000098",
+			"PYAB09901002018000149",
+			"PYAB09901002018000084",
+			"PYAB09901002018000111",
+			"PYAB09901002018000109",
+			"PYAB09901002018000075",
+			"PYAB09901002018000158",
+			"PYAB09901002018000056",
+			"PYAB09901002018000059",
+			"PYAB09901002018000058",
+			"PYAB09901002018000060",
+			"PYAB09901002018000099",
+			"PYAB09901002018000049",
+			"PYAB09901002018000048",
+			"PYAB09901002018000050",
+			"PYAB09901002018000053",
+			"PYAB09901002018000040",
+			"PYAB09901002018000039",
+			"PYAB09901002018000041",
+			"PYAB09901002018000045",
+			"PYAB09901002018000026",
+			"PYAB09901002018000030",
+			"PYAB09901002018000027",
+			"PYAB09901002018000033",
+			"PYAB09901002018000035",
+			"PYAB09901002018000034",
+			"PYAB09901002018000018",
+			"PYAB09901002018000017",
+			"PYAB09901002018000022",
+			"PYAB09901002018000020",
+			"PYAB09901002018000156",
+			"PYAB09901002018000152",
+			"PYAB09901002018000013",
+			"PYAB09901002018000012",
+			"PYAB09901002018000014",
+			"PYAB09901002018000129",
+			"PYAB09901002018000128",
+			"PYAB09901002018000086"
+	};
+
+	private static final String[] QP_AS = {
+			"PYAB09901002018000002",
+			"PYAB09901002018000003",
+			"PYAB09901002018000004",
+			"PYAB09901002018000010",
+			"PYAB09901002018000011",
+			"PYAB09901002018000015",
+			"PYAB09901002018000016",
+			"PYAB09901002018000019",
+			"PYAB09901002018000021",
+			"PYAB09901002018000023",
+			"PYAB09901002018000024",
+			"PYAB09901002018000025",
+			"PYAB09901002018000028",
+			"PYAB09901002018000029",
+			"PYAB09901002018000031",
+			"PYAB09901002018000032",
+			"PYAB09901002018000036",
+			"PYAB09901002018000037",
+			"PYAB09901002018000038",
+			"PYAB09901002018000042",
+			"PYAB09901002018000043",
+			"PYAB09901002018000044",
+			"PYAB09901002018000046",
+			"PYAB09901002018000047",
+			"PYAB09901002018000051",
+			"PYAB09901002018000052",
+			"PYAB09901002018000054",
+			"PYAB09901002018000055",
+			"PYAB09901002018000057",
+			"PYAB09901002018000100",
+			"PYAB09901002018000151",
+			"PYAB09901002018000153",
+			"PYAB09901002018000154",
+			"PYAB09901002018000155",
+			"PYAB09901002018000157",
+			"PYAB09901002018000159",
+			"PYAB09901002018000160"
+	};
 }

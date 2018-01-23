@@ -22,6 +22,10 @@ public class StringUtil {
 		return isBlank(str) ? Const.STRING_EMPTY : str;
 	}
 
+	public static String toEmptyIf(Object value) {
+		return value == null ? Const.STRING_EMPTY : value.toString();
+	}
+
 	public static String trim(String str) {
 		return isBlank(str) ? str : Strman.leftTrim(Strman.rightTrim(str));
 	}

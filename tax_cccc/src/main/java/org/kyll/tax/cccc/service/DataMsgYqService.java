@@ -26,6 +26,7 @@ public class DataMsgYqService extends DefaultService<DataMsgYq, String, DataMsgY
 	}
 
 	public List<Object[]> query(String sql) {
-		return entityManager.createNativeQuery(sql).getResultList();
+		List list = entityManager.createNativeQuery(sql).getResultList();
+		return list;
 	}
 }
