@@ -48,7 +48,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -271,7 +270,7 @@ public class CcccFacade {
 					}
 				}
 
-				/*String totalPno = null;
+				/*String totalPno = null; // 合并情况
 				String totalAmt = null;
 				for (int i = beginIndex + 1; i < endIndex; i++) {
 					XWPFTableRow row = rowList.get(i);
@@ -299,6 +298,10 @@ public class CcccFacade {
 					String amt = row.getCell(2).getText().trim();
 
 					if (StringUtil.isNotBlank(pno) && StringUtil.isNotBlank(amt) && !"0".equals(pno) && !"0".equals(amt)) {
+						/*if ("PYAB09901002018000079".equals(pno) || "PYAB09901002018000083".equals(pno)
+								|| "PYAB09901002018000004".equals(pno) || "PYAB09901002018000028".equals(pno) || "PYAB09901002018000029".equals(pno)) {
+							System.out.println(file + ", " + pno);
+						}*/
 						if (endIndex - beginIndex > 1) {
 							list.add(new String[]{taxpayer, pno, amt});
 						}
@@ -310,9 +313,9 @@ public class CcccFacade {
 		/*for (String[] datas : list) {
 			System.out.println("instr(t.tran_seqno, '" + datas[1] + "') > 0 or");
 		//	System.out.println(datas[1]);
-		}*/
+		}
 
-		/*if (true) {
+		if (true) {
 			return;
 		}*/
 
@@ -327,18 +330,20 @@ public class CcccFacade {
 				Map<String, String> map = new HashMap<>();
 				map.put("tran_date", tranDate);
 				map.put("tran_seqno", datas[1]);
-				map.put("dtl_seqno", "2");
+				map.put("dtl_seqno", "30");
+				map.put("acc_inst", "99010000");
 				map.put("amt", datas[2]);
 				map.put("tran_code", "EX_1");
 				map.put("summ", "");
 				map.put("tran_time", tranTime);
+				map.put("prod_code", "603100104");
 				map.put("attribute1", datas[1]);
 				map.put("attribute2", "");
 				map.put("attribute3", "1");
 
 				msg = replaceInfo(msg, map);
-				System.out.println(msg);
-			//	send(msg);
+			//	System.out.println(msg);
+				send(msg);
 			}
 		}
 	}
@@ -396,14 +401,342 @@ public class CcccFacade {
 	}
 
 	public void execute10() {
-		Set<String> pSet = new HashSet<>();
-		Collections.addAll(pSet, P_AS);
+		String[] strs = {
+				"FC0037357",
+				"FC0004500",
+				"FC0030246",
+				"FC0021711",
+				"FC0030116",
+				"FC0011866",
+				"FC0000025",
+				"FC0000397",
+				"FC0000654",
+				"FC0000708",
+				"FC0000832",
+				"FC0000941",
+				"FC0000957",
+				"FC0001605",
+				"FC0001655",
+				"FC0001942",
+				"FC0001966",
+				"FC0001997",
+				"FC0002024",
+				"FC0002681",
+				"FC0003759",
+				"FC0003765",
+				"FC0006016",
+				"FC0006283",
+				"FC0006538",
+				"FC0006782",
+				"FC0007543",
+				"FC0007823",
+				"FC0008240",
+				"FC0008517",
+				"FC0008563",
+				"FC0008730",
+				"FC0010057",
+				"FC0010920",
+				"FC0011128",
+				"FC0011323",
+				"FC0012693",
+				"FC0014846",
+				"FC0016994",
+				"FC0022953",
+				"FC0023444",
+				"FC0028408",
+				"FC0030118",
+				"FC0033980",
+				"FC0028918",
+				"FC0013572",
+				"FC0008447",
+				"FC0006068",
+				"FC0011139",
+				"FC0029569",
+				"FC0029573",
+				"FC0023065",
+				"FC0007392",
+				"FC0037354",
+				"FC0003535",
+				"FC0008761",
+				"FC0010850",
+				"FC0013542",
+				"FC5206898",
+				"FC5206958",
+				"FC5207057",
+				"FC5207116",
+				"FC0001066",
+				"FC0013213",
+				"FC0032346",
+				"FC5206919",
+				"FC5206982",
+				"FC5207034",
+				"FC0000884",
+				"FC0000929",
+				"FC0001961",
+				"FC0002064",
+				"FC0003012",
+				"FC0003528",
+				"FC0008115",
+				"FC0011041",
+				"FC0013670",
+				"FC0022954",
+				"FC0005125",
+				"FC0010087",
+				"FC0014256",
+				"FC0015631",
+				"FC0022845",
+				"FC0037267",
+				"FC0038038",
+				"FC0006363",
+				"FC0001119",
+				"FC0002333",
+				"FC0002992",
+				"FC0002994",
+				"FC0005055",
+				"FC0008526",
+				"FC0009180",
+				"FC0009998",
+				"FC0010668",
+				"FC0013046",
+				"FC0014104",
+				"FC0015979",
+				"FC0029958",
+				"FC0032914",
+				"FC0035345",
+				"FC0035887",
+				"FC5206917",
+				"FC5206929",
+				"FC5207011",
+				"FC5207082",
+				"FC0029922",
+				"FC0007799",
+				"FC0010441",
+				"FC0013064",
+				"FC0016018",
+				"FC0018925",
+				"FC0020397",
+				"FC0023338",
+				"FC0033717",
+				"FC0034763",
+				"FC0038402",
+				"FC5206827",
+				"FC5206883",
+				"FC5206916",
+				"FC5206925",
+				"FC5206934",
+				"FC5206935",
+				"FC5207070",
+				"FC0003926",
+				"FC0007038",
+				"FC0007063",
+				"FC0014335",
+				"FC0019954",
+				"FC0021829",
+				"FC0022942",
+				"FC0036307",
+				"FC0037486",
+				"FC5206855",
+				"FC0003015",
+				"FC0000552",
+				"FC0000824",
+				"FC0038089",
+				"FC0038589",
+				"FC0032732",
+				"FC5206940",
+				"FC5207020",
+				"FC5207026",
+				"FC5207062",
+				"FC5207099",
+				"FC0007006",
+				"FC0008780",
+				"FC0008781",
+				"FC0009244",
+				"FC0013943",
+				"FC0015138",
+				"FC0015326",
+				"FC0015423",
+				"FC0017921",
+				"FC0018394",
+				"FC0019254",
+				"FC0021522",
+				"FC0023983",
+				"FC0010132",
+				"FC0000718",
+				"FC0001627",
+				"FC0004380",
+				"FC0005790",
+				"FC0006580",
+				"FC0009094",
+				"FC0010127",
+				"FC0010603",
+				"FC0013582",
+				"FC0014543",
+				"FC0014713",
+				"FC0030534",
+				"FC0037115",
+				"FC5206948",
+				"FC5206985",
+				"FC5206987",
+				"FC0033661",
+				"FC0035983",
+				"FC0037259",
+				"FC5206837",
+				"FC5206863",
+				"FC5206889",
+				"FC5206895",
+				"FC5206896",
+				"FC5206936",
+				"FC5206944",
+				"FC5206950",
+				"FC5206956",
+				"FC5206970",
+				"FC5206983",
+				"FC5207068",
+				"FC5207081",
+				"FC5207121",
+				"FC5207135",
+				"FC5207021",
+				"FC0007649",
+				"FC0010649",
+				"FC0013112",
+				"FC0014895",
+				"FC0019323",
+				"FC0023370",
+				"FC0027386",
+				"FC0034070",
+				"FC5206900",
+				"FC5206938",
+				"FC5207079",
+				"FC0010002",
+				"FC0018146",
+				"FC0022740",
+				"FC0030184",
+				"FC5206909",
+				"FC5206912",
+				"FC5206924",
+				"FC5206941",
+				"FC5206966",
+				"FC5207024",
+				"FC0000044",
+				"FC0000909",
+				"FC0001996",
+				"FC0006076",
+				"FC0006502",
+				"FC0012541",
+				"FC0030106",
+				"FC0000603",
+				"FC0001545",
+				"FC0002386",
+				"FC0002832",
+				"FC0004884",
+				"FC0007810",
+				"FC0008385",
+				"FC0010276",
+				"FC0012602",
+				"FC0014127",
+				"FC0016431",
+				"FC0026926",
+				"FC0037540",
+				"FC0038110",
+				"FC0038230",
+				"FC0038794",
+				"FC0038997",
+				"FC0040441",
+				"FC0041287",
+				"FC5206828",
+				"FC5206852",
+				"FC5206858",
+				"FC5206864",
+				"FC5206901",
+				"FC5206968",
+				"FC5206978",
+				"FC5207033",
+				"FC5207047",
+				"FC5207087",
+				"FC5207089",
+				"FC5207112",
+				"FC5207145",
+				"FC0001999",
+				"FC0003900",
+				"FC0007660",
+				"FC0008283",
+				"FC0009950",
+				"FC0038060",
+				"FC0008658",
+				"FC0038152",
+				"FC0001003",
+				"FC0001500",
+				"FC0001575",
+				"FC0002591",
+				"FC0000875",
+				"FC0001094",
+				"FC0002124",
+				"FC0002960",
+				"FC0003388",
+				"FC0003605",
+				"FC0003617",
+				"FC0004680",
+				"FC0004943",
+				"FC0007033",
+				"FC0008037",
+				"FC0003505",
+				"FC0004904",
+				"FC0005045",
+				"FC0007599",
+				"FC0007629",
+				"FC0008152",
+				"FC0008170",
+				"FC0008260",
+				"FC0008345",
+				"FC0010257",
+				"FC0013104",
+				"FC0019014",
+				"FC0020291",
+				"FC0027725",
+				"FC0008200",
+				"FC0008976",
+				"FC0008977",
+				"FC0009040",
+				"FC0029182",
+				"FC0035508",
+				"FC5206868",
+				"FC5206927",
+				"FC5206945",
+				"FC5206953",
+				"FC5206986",
+				"FC5207032",
+				"FC0029920",
+				"FC0000752",
+				"FC0013177",
+				"FC0014518",
+				"FC0015526",
+				"FC0016765",
+				"FC0017413",
+				"FC0026669",
+				"FC0020865",
+				"FC0021273",
+				"FC0023151",
+				"FC0025445",
+				"FC0026385",
+				"FC0026656",
+				"FC0034949",
+				"FC0038125",
+				"FC5206874",
+				"FC5206964",
+				"FC5206995",
+				"FC5207007",
+				"FC0000936",
+				"FC0016100",
+				"FC0000253",
+				"FC0001167",
+				"FC0005159"
+		};
 
-		for (String p : QP_AS) {
-			if (!pSet.add(p)) {
-				System.out.println(p);
-			}
+		StringBuilder result = new StringBuilder();
+		for (String s : strs) {
+			result.append(s).append("\\|");
 		}
+		System.out.println(result);
 	}
 
 	public void execute11() {
@@ -631,7 +964,7 @@ public class CcccFacade {
 			connection.setRequestProperty("Cache-Control", "no-cache");
 			connection.setRequestProperty("Connection", "Keep-Alive");
 			connection.setRequestProperty("Content-Length", "11");
-			connection.setRequestProperty("Cookie", "JSESSIONID=sy0ThvcLBvCJn1v8d7344JFTSjJ3VtR5LVGP2C1vzLFsySNp6tfQ!1527925976");
+			connection.setRequestProperty("Cookie", "JSESSIONID=2LLdhnSShQxsD1wCkgSy1wxXrQJSX0B7l0z2Hh0s7fV1Rp07vrMt!1527925976");
 			connection.setRequestProperty("DNT", "1");
 			connection.setRequestProperty("Host", "10.9.237.153:7001");
 			connection.setRequestProperty("Referer", "http://10.9.237.153:7001/default/tax/aatest/cccc.jsp");
